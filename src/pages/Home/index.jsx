@@ -9,7 +9,6 @@ function Home() {
 
   return (
     <div>
-      <span>home nè</span>
       <Button
         onClick={() => history.push('signin')}
         size={"large"}
