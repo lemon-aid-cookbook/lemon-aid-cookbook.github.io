@@ -18,7 +18,7 @@ const signinEpic$ = (action$) =>
       }).pipe(
         map((result) => {
           if (result.status === 200) {
-            return SignInRequestSuccess.get(result.result);
+            return SignInRequestSuccess.get(result.data);
           }
           return SignInRequestFailed.get(result);
         }),
