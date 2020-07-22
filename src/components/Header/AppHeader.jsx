@@ -17,14 +17,16 @@ export default function PrimarySearchAppBar() {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
-        <Toolbar>
-          <AppHeaderLogo />
-          <AppHeaderSearch />
-          <AppHeaderAction />
-          {/* <AppHeaderProfile /> */}
-        </Toolbar>
-      </AppBar>
+      <React.Fragment>
+        <AppBar position="static">
+          <Toolbar>
+            <AppHeaderLogo />
+            <AppHeaderSearch />
+            <AppHeaderAction />
+            {/* <AppHeaderProfile /> */}
+          </Toolbar>
+        </AppBar>
+      </React.Fragment>
     </div>
   )
 }
