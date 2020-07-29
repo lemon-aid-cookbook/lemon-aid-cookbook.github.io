@@ -9,11 +9,12 @@ export default () => {
       title: 'Beefsteak',
       image:
         'https://realfood.tesco.com/media/images/Ritas-enchiladas-recipe-1400x919-1c7ff22b-ea5e-44cf-9ada-d7b04420002f-0-1400x919.jpg',
-      to: '/',
+      to: `/#/recipe/${i}`,
       time: '120 phút',
       star: 5,
       owner: 'Maria Muahaha',
-      avatar: '',
+      avatar:
+        'https://www.takadada.com/wp-content/uploads/2019/07/avatar-anime-nu-cho-facebook-73.jpg',
       createdDate: 'September 14, 2016'
     })
   }
