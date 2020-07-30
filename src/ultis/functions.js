@@ -5,6 +5,11 @@ export const COLOR = {
   deactiveGray: '#9B9B9B'
 }
 
+export const MODAL_TYPE = {
+  NORMAL: 'NORMAL',
+  CHOICE: 'CHOICE',
+};
+
 export function log(...arg) {
   if (__DEV__) {
     console.info(

@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { IconContext } from "react-icons";
 import * as serviceWorker from "./serviceWorker";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { GlobalModal, GlobalModalSetup } from "components/GlobalModal";
 
 const theme = createMuiTheme({
   typography: {
@@ -37,6 +38,9 @@ ReactDOM.render(
           }}
         >
           <App />
+          <GlobalModal
+            ref={(ref) => GlobalModalSetup.setGlobalModalHolder(ref)}
+          />
         </IconContext.Provider>
       </ThemeProvider>
     </Provider>

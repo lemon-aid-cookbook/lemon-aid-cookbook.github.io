@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { from } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, catchError } from 'rxjs/operators';
 import { DOMAIN, log as SysLog, __DEV__ } from 'ultis/functions';
 
 export function request(param) {
@@ -28,6 +28,7 @@ export function request(param) {
       return result;
     }),
     tap((result) => log(url, parameters, result)),
+    catchError(error => console.log(error))
   );
 }
 
