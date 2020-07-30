@@ -1,16 +1,18 @@
+import Button from "@material-ui/core/Button";
 import { Form, Formik } from "formik";
-import React, { useState, useEffect } from "react";
+import { CTextField, helperTextStyles, styles } from "pages/SignIn/constants";
+import { SignUpRequest } from "pages/SignIn/redux/actions";
+import React, { useEffect } from "react";
+import GoogleLogin from "react-google-login";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { COLOR } from "ultis/functions";
+import { COLOR, CLIENT_ID } from "ultis/functions";
 import * as yup from "yup";
 import "../SignIn/signin.css";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import { useDispatch, useSelector } from "react-redux";
-import { SignUpRequest } from "pages/SignIn/redux/actions";
 
 function SignUp() {
   const history = useHistory();
+  const helperTextStyle = helperTextStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth?.user);
 
@@ -63,10 +65,18 @@ function SignUp() {
     }
   };
 
+  const responseGoogle = (response) => {
+    // console.log(response);
+    // var res = response.profileObj;
+    // console.log(res);
+  };
+
   return (
     <div id="bg">
-      <div id="loginBg">
-        <span className="dimoName">Lemon-aid</span>
+      <div id="loginBg" style={{ paddingBottom: 20 }}>
+        <a href="/" style={{ textDecoration: "none", color: "white" }}>
+          <span className="dimoName">Lemon-aid</span>
+        </a>
         <div id="loginBox">
           <span id="loginStyle">Đăng ký</span>
           <Formik
@@ -93,13 +103,9 @@ function SignUp() {
             }) => {
               return (
                 <Form className="formStyle">
-                  <TextField
-                    id={
-                      errors.name
-                        ? "outlined-error-helper-text"
-                        : "outlined-required"
-                    }
+                  <CTextField
                     helperText={errors.name && errors.name}
+                    FormHelperTextProps={{ classes: helperTextStyle }}
                     label="Tên"
                     variant="outlined"
                     value={values.name}
@@ -109,14 +115,11 @@ function SignUp() {
                     onKeyPress={(event) =>
                       handleKeyPress(isValid, event, values)
                     }
+                    style={styles.input}
                   />
-                  <TextField
-                    id={
-                      errors.username
-                        ? "outlined-error-helper-text"
-                        : "outlined-required"
-                    }
+                  <CTextField
                     helperText={errors.username && errors.username}
+                    FormHelperTextProps={{ classes: helperTextStyle }}
                     label="Tên đăng nhập"
                     variant="outlined"
                     value={values.username}
@@ -126,14 +129,11 @@ function SignUp() {
                     onKeyPress={(event) =>
                       handleKeyPress(isValid, event, values)
                     }
+                    style={styles.input}
                   />
-                  <TextField
-                    id={
-                      errors.email
-                        ? "outlined-error-helper-text"
-                        : "outlined-required"
-                    }
+                  <CTextField
                     helperText={errors.email && errors.email}
+                    FormHelperTextProps={{ classes: helperTextStyle }}
                     label="Email"
                     variant="outlined"
                     value={values.email}
@@ -143,14 +143,11 @@ function SignUp() {
                     onKeyPress={(event) =>
                       handleKeyPress(isValid, event, values)
                     }
+                    style={styles.input}
                   />
-                  <TextField
-                    id={
-                      errors.password
-                        ? "outlined-error-helper-text"
-                        : "outlined-password-input"
-                    }
+                  <CTextField
                     helperText={errors.password && errors.password}
+                    FormHelperTextProps={{ classes: helperTextStyle }}
                     label="Mật khẩu"
                     variant="outlined"
                     onChange={handleChange("password")}
@@ -160,16 +157,13 @@ function SignUp() {
                     onKeyPress={(event) =>
                       handleKeyPress(isValid, event, values)
                     }
+                    style={styles.input}
                   />
-                  <TextField
-                    id={
-                      errors.confirmPassword
-                        ? "outlined-error-helper-text"
-                        : "outlined-password-input"
-                    }
+                  <CTextField
                     helperText={
                       errors.confirmPassword && errors.confirmPassword
                     }
+                    FormHelperTextProps={{ classes: helperTextStyle }}
                     label="Nhập lại mật khẩu"
                     variant="outlined"
                     onChange={handleChange("confirmPassword")}
@@ -179,10 +173,14 @@ function SignUp() {
                     onKeyPress={(event) =>
                       handleKeyPress(isValid, event, values)
                     }
+                    style={styles.input}
                   />
                   <div style={{ alignSelf: "flex-end" }}>
                     <span>Đã có tài khoản?</span>
-                    <Button onClick={() => history.push("/signin")}>
+                    <Button
+                      color="primary"
+                      onClick={() => history.push("/signin")}
+                    >
                       Đăng nhập
                     </Button>
                   </div>
@@ -203,16 +201,12 @@ function SignUp() {
               );
             }}
           </Formik>
-          <span style={{ fontSize: 18, marginTop: 16, marginBottom: 16 }}>
-            Đăng ký với
-          </span>
-          <Button size="small">
-            <img
-              src={require("assets/Google.png")}
-              style={{ width: "40%" }}
-              alt="gg"
-            />
-          </Button>
+          <GoogleLogin
+            clientId={CLIENT_ID}
+            buttonText="Đăng ký với Google"
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+          />
         </div>
       </div>
       <div id="imgBg">

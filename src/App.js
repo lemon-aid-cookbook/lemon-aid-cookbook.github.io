@@ -17,7 +17,7 @@ function App() {
       <Route path="/signin" component={SignIn} />
       <Route path="/signup" component={SignUp} />
       <Route exact path="/recipes" component={Recipes} />
-      <Route path="/recipes/create" component={RecipeCreate} />
+      <Route path="/create" component={RecipeCreate} />
       <Route path="/recipe/:id" component={Recipe} />
       <Route path="/forgot" component={ForgotPassword} />
     </Router>

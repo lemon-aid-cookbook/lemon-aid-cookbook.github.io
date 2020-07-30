@@ -13,7 +13,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const user = useSelector((state) => state.Auth?.user);
 
@@ -23,7 +23,7 @@ export default function PrimarySearchAppBar() {
         <AppBar position="static">
           <Toolbar>
             <AppHeaderLogo />
-            <AppHeaderSearch />
+            {props.from == null && <AppHeaderSearch />}
             {user ? <AppHeaderProfile /> : <AppHeaderAction />}
           </Toolbar>
         </AppBar>

@@ -8,10 +8,12 @@ import { useHistory } from "react-router-dom";
 import { COLOR } from "ultis/functions";
 import * as yup from "yup";
 import "../SignIn/signin.css";
+import { styles, helperTextStyles } from "pages/SignIn/constants";
 
 function ForgotPassword() {
   const history = useHistory();
   const dispatch = useDispatch();
+  const helperTextStyle = helperTextStyles();
   const user = useSelector((state) => state.Auth?.user);
 
   useEffect(() => {
@@ -42,7 +44,9 @@ function ForgotPassword() {
   return (
     <div id="bg">
       <div id="loginBg">
-        <span className="dimoName">Lemon-aid</span>
+        <a href="/" style={{ textDecoration: "none", color: "white" }}>
+          <span className="dimoName">Lemon-aid</span>
+        </a>
         <div id="loginBox">
           <span id="loginStyle">Quên mật khẩu</span>
           <Formik
@@ -68,16 +72,12 @@ function ForgotPassword() {
                   <span style={{ alignSelf: "flex-start" }}>
                     Vui lòng nhập email.
                   </span>
-                  <p style={{ alignSelf: "flex-start" }}>
+                  <p style={{ alignSelf: "flex-start", marginBottom: 28 }}>
                     Bạn sẽ nhận được đường dẫn tạo mật khẩu mới qua email
                   </p>
                   <TextField
-                    id={
-                      errors.email
-                        ? "outlined-error-helper-text"
-                        : "outlined-required"
-                    }
                     helperText={errors.email && errors.email}
+                    FormHelperTextProps={{ classes: helperTextStyle }}
                     label="Email"
                     variant="outlined"
                     value={values.email}
@@ -87,6 +87,7 @@ function ForgotPassword() {
                     onKeyPress={(event) =>
                       handleKeyPress(isValid, event, values)
                     }
+                    style={styles.input}
                   />
                   <Button
                     id="loginBtn"
