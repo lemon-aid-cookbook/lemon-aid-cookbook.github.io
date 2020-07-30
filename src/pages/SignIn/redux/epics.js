@@ -13,6 +13,7 @@ import {
   ResetPasswordFailed,
 } from "./actions";
 import { GlobalModalSetup } from "components/GlobalModal";
+import { history } from "ultis/functions";
 
 const signinEpic$ = (action$) =>
   action$.pipe(
@@ -25,6 +26,7 @@ const signinEpic$ = (action$) =>
       }).pipe(
         map((result) => {
           if (result.status === 200) {
+            history.back();
             return SignInRequestSuccess.get(result.data);
           }
           return SignInRequestFailed.get(result);

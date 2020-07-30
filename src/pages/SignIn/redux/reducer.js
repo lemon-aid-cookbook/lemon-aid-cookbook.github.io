@@ -1,13 +1,23 @@
-import { SignInRequestSuccess } from "./actions";
+import { SignInRequestSuccess, SignOut } from "./actions";
 const initialState = {
   token: null,
-  user: null
+  user: null,
 };
 
 export function authReducer(state = initialState, action) {
   switch (action.type) {
     case SignInRequestSuccess.type:
-      return { ...state, token: action.payload.token, user: action.payload.user };
+      return {
+        ...state,
+        token: action.payload.token,
+        user: action.payload.user,
+      };
+    case SignOut.type:
+      return {
+        ...state,
+        token: null,
+        user: null,
+      };
     default:
       return state;
   }

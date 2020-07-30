@@ -11,3 +11,5 @@ export const SignUpRequestFailed = defineAction('SIGNUP_REQUEST_FAILED')
 export const ResetPassword = defineAction('RESET_PASSWORD_REQUEST')
 export const ResetPasswordSuccess = defineAction('RESET_PASSWORD_SUCCESS')
 export const ResetPasswordFailed = defineAction('RESET_PASSWORD_FAILED')
+
+export const SignOut = defineAction('SIGNOUT_REQUEST')

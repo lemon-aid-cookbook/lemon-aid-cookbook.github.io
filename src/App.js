@@ -8,10 +8,11 @@ import Recipe from "pages/Recipe";
 import SignUp from "pages/SignUp";
 import ForgotPassword from "pages/ForgotPassword";
 import RecipeCreate from "pages/RecipeCreate";
+import { history } from "ultis/functions";
 
 function App() {
   return (
-    <Router>
+    <Router history={history}>
       <Route exact path="/" component={Home} />
       <Route path="/signin" component={SignIn} />
       <Route path="/signup" component={SignUp} />
