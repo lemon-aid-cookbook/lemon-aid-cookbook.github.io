@@ -158,6 +158,7 @@ function SignUp() {
                       handleKeyPress(isValid, event, values)
                     }
                     style={styles.input}
+                    type='password'
                   />
                   <CTextField
                     helperText={
@@ -174,6 +175,7 @@ function SignUp() {
                       handleKeyPress(isValid, event, values)
                     }
                     style={styles.input}
+                    type='password'
                   />
                   <div style={{ alignSelf: "flex-end" }}>
                     <span>Đã có tài khoản?</span>

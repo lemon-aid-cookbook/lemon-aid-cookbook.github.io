@@ -105,6 +105,7 @@ function SignIn() {
                       handleKeyPress(isValid, event, values)
                     }
                     style={styles.input}
+                    type='password'
                   />
                   <div className="buttomBox">
                     <Button onClick={() => history.push("/forgot")}>
