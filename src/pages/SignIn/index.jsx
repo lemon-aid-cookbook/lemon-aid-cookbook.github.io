@@ -123,14 +123,14 @@ function SignIn() {
                     onClick={handleSubmit}
                     size={"large"}
                   >
-                    Đăng ký
+                    Đăng nhập
                   </Button>
                 </Form>
               );
             }}
           </Formik>
           <span style={{ fontSize: 18, marginTop: 16, marginBottom: 16 }}>
-            Đăng ký với
+            Đăng nhập bằng
           </span>
           <Button size="small">
             <img
