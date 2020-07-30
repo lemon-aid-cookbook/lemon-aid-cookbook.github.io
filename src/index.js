@@ -1,12 +1,13 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
-import { store } from 'core/store'
-import { Provider } from 'react-redux'
-import { IconContext } from 'react-icons'
-import * as serviceWorker from './serviceWorker'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import { store } from "core/store";
+import { Provider } from "react-redux";
+import { IconContext } from "react-icons";
+import * as serviceWorker from "./serviceWorker";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { GlobalModal, GlobalModalSetup } from "components/GlobalModal";
 import { COLOR } from 'ultis/functions'
 
 const theme = createMuiTheme({
@@ -43,6 +44,9 @@ ReactDOM.render(
           }}
         >
           <App />
+          <GlobalModal
+            ref={(ref) => GlobalModalSetup.setGlobalModalHolder(ref)}
+          />
         </IconContext.Provider>
       </ThemeProvider>
     </Provider>
