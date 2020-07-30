@@ -1,5 +1,5 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
   CardHeader,
@@ -7,36 +7,37 @@ import {
   Avatar,
   Typography,
   Grid,
-  Button
-} from '@material-ui/core/'
-import QueryBuilderIcon from '@material-ui/icons/QueryBuilder'
-import StarIcon from '@material-ui/icons/Star'
+  Button,
+} from "@material-ui/core/";
+import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
+import StarIcon from "@material-ui/icons/Star";
+import { Link } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345
+    maxWidth: 345,
   },
   link: {
-    textDecoration: 'none',
-    color: '#000000'
+    textDecoration: "none",
+    color: "#000000",
   },
   media: {
     height: 0,
-    paddingTop: '56.25%'
+    paddingTop: "56.25%",
   },
   content: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-    paddingTop: theme.spacing(1)
-  }
-}))
+    paddingTop: theme.spacing(1),
+  },
+}));
 
-export default props => {
-  const classes = useStyles()
+export default (props) => {
+  const classes = useStyles();
 
   return (
     <Card className={classes.root}>
-      <a href={props.to} className={classes.link}>
+      <Link to={`recipe/${props.to}`} className={classes.link}>
         <CardMedia
           className={classes.media}
           image={props.image}
@@ -49,9 +50,9 @@ export default props => {
                 {props.time}
               </Button>
             </Grid>
-            <Grid item xs={6} style={{ textAlign: 'right' }}>
+            <Grid item xs={6} style={{ textAlign: "right" }}>
               <Button
-                startIcon={<StarIcon style={{ color: 'yellow' }} />}
+                startIcon={<StarIcon style={{ color: "yellow" }} />}
                 size="small"
               >
                 {props.star}
@@ -67,7 +68,7 @@ export default props => {
           title={props.owner}
           subheader={props.createdDate}
         />
-      </a>
+      </Link>
     </Card>
-  )
-}
+  );
+};
