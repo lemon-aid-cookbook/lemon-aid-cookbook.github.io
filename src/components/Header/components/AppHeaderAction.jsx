@@ -30,7 +30,7 @@ export default () => {
       <Button
         color="inherit"
         variant="outlined"
-        onClick={() => history.push('signin')}
+        onClick={() => history.push('signup')}
       >
         Đăng ký
       </Button>

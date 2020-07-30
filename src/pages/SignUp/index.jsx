@@ -68,7 +68,7 @@ function SignUp() {
       <div id="loginBg">
         <span className="dimoName">Lemon-aid</span>
         <div id="loginBox">
-          <span id="loginStyle">Đăng nhập</span>
+          <span id="loginStyle">Đăng ký</span>
           <Formik
             initialValues={{
               email: "",
