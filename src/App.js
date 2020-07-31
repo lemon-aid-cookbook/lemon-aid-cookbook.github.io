@@ -1,14 +1,15 @@
+import ForgotPassword from "pages/ForgotPassword";
+import Home from "pages/Home";
+import Profile from "pages/Profile";
+import Recipe from "pages/Recipe";
+import RecipeCreate from "pages/RecipeCreate";
+import Recipes from "pages/Recipes";
+import SignIn from "pages/SignIn";
+import SignUp from "pages/SignUp";
 import React from "react";
 import { HashRouter as Router, Route } from "react-router-dom";
-import "./App.css";
-import Home from "pages/Home";
-import SignIn from "pages/SignIn";
-import Recipes from "pages/Recipes";
-import Recipe from "pages/Recipe";
-import SignUp from "pages/SignUp";
-import ForgotPassword from "pages/ForgotPassword";
-import RecipeCreate from "pages/RecipeCreate";
 import { history } from "ultis/functions";
+import "./App.css";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route path="/create" component={RecipeCreate} />
       <Route path="/recipe/:id" component={Recipe} />
       <Route path="/forgot" component={ForgotPassword} />
+      <Route path="/profile" component={Profile} />
     </Router>
   );
 }
