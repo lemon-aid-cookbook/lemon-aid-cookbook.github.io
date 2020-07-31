@@ -59,7 +59,14 @@ export default () => {
         open={isMenuOpen}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>Trang cá nhân</MenuItem>
+        <MenuItem
+          onClick={() => {
+            history.push("profile");
+            handleMenuClose();
+          }}
+        >
+          Trang cá nhân
+        </MenuItem>
         <MenuItem onClick={handleMenuClose}>Yêu thích</MenuItem>
         <MenuItem
           onClick={() => {

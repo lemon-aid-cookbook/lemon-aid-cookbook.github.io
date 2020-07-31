@@ -25,6 +25,7 @@ export function request(param) {
     }),
   ).pipe(
     map((result) => {
+      console.log(result)
       return result;
     }),
     tap((result) => log(url, parameters, result)),
