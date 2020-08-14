@@ -32,6 +32,9 @@ export function request(param) {
       headers,
       method: param.method || "POST",
       data: parameters,
+      ...(param.method === "GET"
+        ? { params: parameters, data: {} }
+        : { data: parameters }),
     })
   ).pipe(
     map((result) => {

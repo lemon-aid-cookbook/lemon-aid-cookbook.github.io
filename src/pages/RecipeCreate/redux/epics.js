@@ -5,6 +5,9 @@ import {
   CreateRecipe,
   CreateRecipeFailed,
   CreateRecipeSuccess,
+  GetDetailRecipe,
+  GetDetailRecipeSuccess,
+  GetDetailRecipeFailed,
 } from "./actions";
 
 const createRecipeEpic$ = (action$) =>
@@ -29,4 +32,28 @@ const createRecipeEpic$ = (action$) =>
     })
   );
 
-export const recipeEpics = combineEpics(createRecipeEpic$);
+const getDetailRecipeEpic$ = (action$) =>
+  action$.pipe(
+    ofType(GetDetailRecipe.type),
+    exhaustMap((action) => {
+      return request({
+        method: "GET",
+        url: `post/getPost/${action.payload.postId}`,
+      }).pipe(
+        map((result) => {
+          if (result.status === 200) {
+            return GetDetailRecipeSuccess.get(result.data);
+          }
+          return GetDetailRecipeFailed.get(result);
+        }),
+        catchError((error) => {
+          return GetDetailRecipeFailed.get(error);
+        })
+      );
+    })
+  );
+
+export const recipeEpics = combineEpics(
+  createRecipeEpic$,
+  getDetailRecipeEpic$
+);

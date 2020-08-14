@@ -1,28 +1,38 @@
-import React from 'react'
-import { Grid, Typography, Button } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import StarIcon from '@material-ui/icons/Star'
+import React from "react";
+import { Grid, Typography, Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import StarIcon from "@material-ui/icons/Star";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   listUnstyled: {
-    listStyleType: 'none',
+    listStyleType: "none",
     marginTop: 0,
-    lineHeight: '1.75rem'
+    lineHeight: "1.75rem",
   },
   listStyled: {
-    listStyleType: 'circle',
+    listStyleType: "circle",
     marginTop: 0,
-    lineHeight: '1.75rem'
-  }
-}))
+    lineHeight: "1.75rem",
+  },
+  stepStyle: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+  image: {
+    width: "100%",
+    borderRadius: "1.5rem",
+    display: "block",
+    marginBottom: theme.spacing(1),
+  },
+}));
 
-export default props => {
-  const { readyTime, cookTime, ration, rating, materials, steps } = props
+export default (props) => {
+  const { readyTime, cookTime, ration, rating, materials, steps } = props;
 
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <>
@@ -37,44 +47,41 @@ export default props => {
           <Typography variant="body1">Nấu: {cookTime} phút</Typography>
           <Button
             size="small"
-            startIcon={<StarIcon style={{ color: 'yellow' }} />}
+            startIcon={<StarIcon style={{ color: "yellow" }} />}
           >
             {rating}
           </Button>
         </Grid>
       </Grid>
-      <div className="materials">
-        <Typography variant="h6" color="primary">
-          Nguyên liệu
-        </Typography>
-        <ul className={classes.listUnstyled}>
-          {materials.map(material => (
-            <li key={material.name}>
-              {material.name}
-              {material.gram ? `: ${material.gram}gr` : ''}
-            </li>
+      {materials && materials.length > 0 && (
+        <div className="materials">
+          <Typography variant="h6" color="primary">
+            Nguyên liệu
+          </Typography>
+          <ul className={classes.listUnstyled}>
+            {materials.map((material) => (
+              <li key={material}>{material}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {steps && steps.length > 0 && (
+        <div className="steps">
+          <Typography variant="h6" color="primary">
+            Các bước thực hiện
+          </Typography>
+          {steps.map((step) => (
+            <div className="step">
+              <Typography variant="body1" className={classes.stepStyle}>
+                <strong>Bước {step.stt}:</strong> {step.making}
+              </Typography>
+              {step.image && (
+                <img src={step.image} alt="img" className={classes.image} />
+              )}
+            </div>
           ))}
-        </ul>
-      </div>
-      <div className="steps">
-        <Typography variant="h6" color="primary">
-          Các bước thực hiện
-        </Typography>
-        {steps.map((step, i) => (
-          <div className="step">
-            <Typography variant="h6">
-              <strong>
-                {i + 1}. {step.name}
-              </strong>
-            </Typography>
-            <ul className={classes.listStyled}>
-              {step.todo.map(td => (
-                <li key={td}>{td}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+        </div>
+      )}
     </>
-  )
-}
+  );
+};
