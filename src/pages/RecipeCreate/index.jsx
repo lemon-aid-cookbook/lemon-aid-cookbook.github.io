@@ -13,11 +13,13 @@ import CloseIcon from "@material-ui/icons/Close";
 import { Formik } from "formik";
 import { helperTextStyles } from "pages/SignIn/constants";
 import React from "react";
-import ImageUploader from "react-images-upload";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { COLOR } from "ultis/functions";
 import * as yup from "yup";
 import AppHeader from "../../components/Header/AppHeader";
+import ImageUpload from "./components/imageUpload";
+import { IMAGE_TYPE } from "./constant";
 import { CreateRecipe } from "./redux/actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -66,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const contentSchema = yup.object({
+const stepsSchema = yup.object({
   stt: yup.number(),
   making: yup.string().trim().required("* Vui lòng nhập bước thực hiện"),
 });
@@ -81,27 +83,67 @@ const validationSchema = yup.object().shape({
     .array()
     .required("* Vui lòng thêm ít nhất 1 nguyên liệu")
     .of(yup.string().required("* Vui lòng nhập nguyên liệu")),
-  content: yup
+  steps: yup
     .array()
     .required("* Vui lòng thêm ít nhất 1 bước thực hiện")
-    .of(contentSchema),
+    .of(stepsSchema),
+  avatar: yup
+    .string()
+    .nullable()
+    .required("* Vui chọn hình đại diện cho công thức"),
 });
 
 export default (props) => {
   const classes = useStyles();
   const helperTextStyle = helperTextStyles();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.Auth.user);
+  const history = useHistory();
 
-  const addPictureStep = (content, index, picture, setFieldValue) => {
-    let reader = new FileReader();
-    reader.readAsDataURL(picture);
-    reader.onloadend = () => {
-      content[index].picture = reader.result.substr(
-        reader.result.lastIndexOf(",") + 1
-      );
-      setFieldValue("content", content);
-    };
+  const addPictureStep = (steps, index, picture, setFieldValue) => {
+    steps[index].image = picture;
+    setFieldValue("steps", steps);
   };
+
+  const removePictureStep = (steps, index, setFieldValue) => {
+    steps[index].image = null;
+    setFieldValue("steps", steps);
+  };
+
+  const submitRecipe = (values) => {
+    dispatch(
+      CreateRecipe.get({
+        ...values,
+        ingredients: values.ingredients.join("|"),
+        userId: user?.id,
+      })
+    );
+  };
+
+  if (!user) {
+    return (
+      <>
+        <AppHeader />
+        <Container
+          maxWidth="md"
+          className={classes.root}
+          style={{ textAlign: "center" }}
+        >
+          <Typography variant="body1" style={{ margin: 28 }}>
+            Bạn chưa đăng nhập. Vui lòng đăng nhập để tạo bài viết.
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => history.replace("signin")}
+          >
+            Đăng nhập
+          </Button>
+        </Container>
+      </>
+    );
+  }
 
   return (
     <>
@@ -110,18 +152,18 @@ export default (props) => {
         initialValues={{
           title: "",
           description: "",
-          avatar: "",
+          avatar: null,
           ration: "",
-          cookingTime: 0,
+          cookingTime: 20,
           difficultLevel: 1,
           ingredients: [""],
           categories: "",
           hashtags: "",
-          content: [{ stt: 1, making: "", picture: null }],
+          steps: [{ stt: 1, making: "", image: null }],
         }}
         isInitialValid={false}
         validationSchema={validationSchema}
-        onSubmit={(values) => dispatch(CreateRecipe.get(values))}
+        onSubmit={(values) => submitRecipe(values)}
       >
         {({
           handleChange,
@@ -137,13 +179,16 @@ export default (props) => {
           return (
             <Container maxWidth="md" className={classes.root}>
               <Typography variant="h5">Tạo bài đăng</Typography>
-              <img
-                src={
-                  "https://thumbs.dreamstime.com/b/lay-flat-herb-spices-table-top-image-ration-shot-dark-moody-cooking-111890196.jpg"
-                }
-                alt={values.title}
-                className={classes.thumbnail}
+              <ImageUpload
+                type={IMAGE_TYPE.WIDE}
+                onChange={handleChange("avatar")}
+                onRemove={() => setFieldValue("avatar", null)}
               />
+              {errors.avatar && (
+                <Typography variant="body2" className={classes.errorStyle}>
+                  {errors.avatar}
+                </Typography>
+              )}
 
               <div className={classes.group}>
                 <Typography variant="body1">
@@ -253,8 +298,8 @@ export default (props) => {
                 <Typography variant="body1" style={{ marginBottom: "0.75rem" }}>
                   <strong>Các bước thực hiện</strong>
                 </Typography>
-                {values.content.length > 0 &&
-                  values.content.map((step, i) => (
+                {values.steps.length > 0 &&
+                  values.steps.map((step, i) => (
                     <div key={`step${step.stt}`}>
                       <Paper
                         component="div"
@@ -268,53 +313,47 @@ export default (props) => {
                           fullWidth
                           className={classes.field}
                           helperText={
-                            errors.content &&
-                            typeof errors.content === "object" &&
-                            errors.content[i]?.making &&
-                            errors.content[i].making
+                            errors.steps &&
+                            typeof errors.steps === "object" &&
+                            errors.steps[i]?.making &&
+                            errors.steps[i].making
                           }
                           FormHelperTextProps={{ classes: helperTextStyle }}
                           value={step.making}
-                          onTouchStart={() => setFieldTouched("content")}
+                          onTouchStart={() => setFieldTouched("steps")}
                           onChange={(event) => {
-                            let content = values.content;
-                            content[i].making = event.target.value;
-                            setFieldValue("content", content);
+                            let steps = values.steps;
+                            steps[i].making = event.target.value;
+                            setFieldValue("steps", steps);
                           }}
                         />
                         <IconButton
                           color="primary"
                           className={classes.iconButton}
                           onClick={() => {
-                            let content = values.content;
-                            content.splice(i, 1);
-                            setFieldValue("content", content);
+                            let steps = values.steps;
+                            steps.splice(i, 1);
+                            setFieldValue("steps", steps);
                           }}
                         >
                           <CloseIcon />
                         </IconButton>
                       </Paper>
-                      <ImageUploader
-                        withIcon={true}
-                        buttonText="Thêm ảnh minh hoạ"
-                        onChange={(picture) =>
-                          addPictureStep(
-                            values.content,
-                            i,
-                            picture[0],
-                            setFieldValue
-                          )
+                      <ImageUpload
+                        type={IMAGE_TYPE.NORMAL}
+                        onChange={(data) =>
+                          addPictureStep(values.steps, i, data, setFieldValue)
                         }
-                        imgExtension={[".jpg", ".png"]}
-                        maxFileSize={5242880}
-                        singleImage
-                        withPreview
+                        onRemove={() =>
+                          removePictureStep(values.steps, i, setFieldValue)
+                        }
+                        style={{ marginLeft: 40 }}
                       />
                     </div>
                   ))}
-                {errors.content && typeof errors.content === "string" && (
+                {errors.steps && typeof errors.steps === "string" && (
                   <Typography variant="body2" className={classes.errorStyle}>
-                    {errors.content}
+                    {errors.steps}
                   </Typography>
                 )}
                 <Button
@@ -323,12 +362,12 @@ export default (props) => {
                   startIcon={<AddIcon />}
                   className={classes.add}
                   onClick={() => {
-                    let content = values.content;
-                    content.push({
-                      stt: values.content.length + 1,
+                    let steps = values.steps;
+                    steps.push({
+                      stt: values.steps.length + 1,
                       making: "",
                     });
-                    setFieldValue("content", content);
+                    setFieldValue("steps", steps);
                   }}
                 >
                   Thêm bước
