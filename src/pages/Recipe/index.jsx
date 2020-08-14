@@ -82,7 +82,7 @@ export default (props) => {
     ],
   });
 
-  if (isLoading && !post) {
+  if (isLoading || !post) {
     return (
       <>
         <AppHeader />
