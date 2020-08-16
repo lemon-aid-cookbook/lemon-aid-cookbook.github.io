@@ -28,7 +28,7 @@ export function request(param) {
   return from(
     axios.request({
       url,
-      timeout: 10000,
+      timeout: 12000,
       headers,
       method: param.method || "POST",
       data: parameters,
