@@ -11,3 +11,15 @@ export const UpdateInformationSuccess = defineAction(
 export const UpdateInformationFailed = defineAction(
   "UPDATE_INFORMATION_FAILED"
 );
+
+export const GetProfile = defineAction("GET_PROFILE");
+export const GetProfileSuccess = defineAction("GET_PROFILE_SUCCESS");
+export const GetProfileFailed = defineAction("GET_PROFILE_FAILED");
+
+export const Follow = defineAction("FOLLOW");
+export const FollowSuccess = defineAction("FOLLOW_SUCCESS");
+export const FollowFailed = defineAction("FOLLOW_FAILED");
+
+export const Unfollow = defineAction("UNFOLLOW");
+export const UnfollowSuccess = defineAction("UNFOLLOW_SUCCESS");
+export const UnfollowFailed = defineAction("UNFOLLOW_FAILED");

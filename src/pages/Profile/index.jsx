@@ -16,7 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { COLOR } from "ultis/functions";
 import AppHeader from "../../components/Header/AppHeader";
 import AvatarDialog from "./components/avatarDialog";
-import { GetProfilePost } from "./redux/actions";
+import FollowDialog, { FLDIALOG_TYPES } from "./components/followDialog";
+import { GetProfile } from "./redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,9 +74,10 @@ export default (props) => {
   const dispatch = useDispatch();
   const inputRef = useRef();
   const [src, setSrc] = useState(null);
+  const [flDialog, setFlDialog] = useState(null);
 
   useEffect(() => {
-    dispatch(GetProfilePost.get({ userId: user.id }));
+    dispatch(GetProfile.get(user));
   }, []);
 
   const readSrc = (picture) => {
@@ -119,9 +121,15 @@ export default (props) => {
     }
   };
 
-  const { favoritePosts, myPosts, followingPosts, isLoading } = profile;
+  const {
+    favoritePosts,
+    myPosts,
+    followingPosts,
+    isLoading,
+    userDetail,
+  } = profile;
 
-  if (isLoading) {
+  if (isLoading || !userDetail) {
     return (
       <>
         <AppHeader />
@@ -153,14 +161,14 @@ export default (props) => {
           >
             <Avatar
               className={classes.large}
-              src={user && user.avatar ? user.avatar : null}
+              src={userDetail && userDetail.avatar ? userDetail.avatar : null}
             />
           </IconButton>
           <Typography variant="h6" className={classes.boldText}>
-            {user.name}
+            {userDetail.name}
           </Typography>
           <Typography variant="body1" className={classes.grayText}>
-            {user.email}
+            {userDetail.email}
           </Typography>
           <Typography variant="h6" className={classes.boldText}>
             {myPosts ? myPosts.length : 0}
@@ -168,17 +176,25 @@ export default (props) => {
           <Typography variant="body1" className={classes.grayText}>
             bài đăng
           </Typography>
-          <ButtonBase focusRipple className={classes.flw}>
+          <ButtonBase
+            focusRipple
+            className={classes.flw}
+            onClick={() => setFlDialog(FLDIALOG_TYPES.FOLLOWER)}
+          >
             <Typography variant="h6" className={classes.boldText}>
-              {user.followers ? user.followers.length : 0}
+              {userDetail.followers ? userDetail.followers.length : 0}
             </Typography>
             <Typography variant="body1" className={classes.grayText}>
               người theo dõi
             </Typography>
           </ButtonBase>
-          <ButtonBase focusRipple className={classes.flw}>
+          <ButtonBase
+            focusRipple
+            className={classes.flw}
+            onClick={() => setFlDialog(FLDIALOG_TYPES.FOLLOWING)}
+          >
             <Typography variant="h6" className={classes.boldText}>
-              {user.followings ? user.following.length : 0}
+              {userDetail.followings ? userDetail.followings.length : 0}
             </Typography>
             <Typography variant="body1" className={classes.grayText}>
               đang theo dõi
@@ -214,6 +230,16 @@ export default (props) => {
         </div>
       </Container>
       <AvatarDialog open={src != null} value={src} onClose={onCloseDialog} />
+      <FollowDialog
+        open={flDialog != null}
+        type={flDialog}
+        value={
+          flDialog === FLDIALOG_TYPES.FOLLOWING
+            ? userDetail.followings
+            : userDetail.followers
+        }
+        onClose={() => setFlDialog(null)}
+      />
     </>
   );
 };
