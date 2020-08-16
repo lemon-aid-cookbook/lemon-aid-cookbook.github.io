@@ -5,6 +5,9 @@ import {
   GetProfilePost,
   GetProfilePostFailed,
   GetProfilePostSuccess,
+  UpdateInformation,
+  UpdateInformationSuccess,
+  UpdateInformationFailed,
 } from "./actions";
 
 const getProfilePostEpic$ = (action$) =>
@@ -29,4 +32,29 @@ const getProfilePostEpic$ = (action$) =>
     })
   );
 
-export const profileEpics = combineEpics(getProfilePostEpic$);
+const updateInformationEpic$ = (action$) =>
+  action$.pipe(
+    ofType(UpdateInformation.type),
+    exhaustMap((action) => {
+      return request({
+        method: "PUT",
+        url: `user/update/${action.payload.userId}`,
+        param: action.payload.data,
+      }).pipe(
+        map((result) => {
+          if (result.status === 200) {
+            return UpdateInformationSuccess.get(result.data);
+          }
+          return UpdateInformationFailed.get(result);
+        }),
+        catchError((error) => {
+          return UpdateInformationFailed.get(error);
+        })
+      );
+    })
+  );
+
+export const profileEpics = combineEpics(
+  getProfilePostEpic$,
+  updateInformationEpic$
+);

@@ -1,18 +1,21 @@
 import {
   Avatar,
   Button,
+  ButtonBase,
   CircularProgress,
   Container,
+  IconButton,
   Tab,
   Tabs,
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ListRecipes from "pages/Recipes/components/ListRecipes";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { COLOR } from "ultis/functions";
 import AppHeader from "../../components/Header/AppHeader";
+import AvatarDialog from "./components/avatarDialog";
 import { GetProfilePost } from "./redux/actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +53,14 @@ const useStyles = makeStyles((theme) => ({
   emptyText: {
     marginTop: theme.spacing(3),
   },
+  flw: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    borderRadius: 25,
+    paddingLeft: 16,
+    paddingRight: 16,
+  },
 }));
 
 const tabs = ["Bài đăng", "Yêu thích", "Đang theo dõi"];
@@ -60,10 +71,24 @@ export default (props) => {
   const profile = useSelector((state) => state.Profile);
   const [tabIndex, setTabIndex] = useState(0);
   const dispatch = useDispatch();
+  const inputRef = useRef();
+  const [src, setSrc] = useState(null);
 
   useEffect(() => {
     dispatch(GetProfilePost.get({ userId: user.id }));
   }, []);
+
+  const readSrc = (picture) => {
+    let reader = new FileReader();
+    reader.readAsDataURL(picture);
+    reader.onloadend = () => {
+      setSrc(reader.result);
+    };
+  };
+
+  const onCloseDialog = () => {
+    setSrc(null);
+  };
 
   const renderEmpty = () => {
     switch (tabIndex) {
@@ -114,10 +139,23 @@ export default (props) => {
       <AppHeader />
       <Container maxWidth="lg" className={classes.root}>
         <div className={classes.left}>
-          <Avatar
-            className={classes.large}
-            src={user && user.avatar ? user.avatar : null}
+          <input
+            accept="image/*"
+            style={{ display: "none" }}
+            ref={inputRef}
+            type="file"
+            onChange={(e) => readSrc(e.target.files[0])}
           />
+          <IconButton
+            edge="end"
+            onClick={() => inputRef.current.click()}
+            color="inherit"
+          >
+            <Avatar
+              className={classes.large}
+              src={user && user.avatar ? user.avatar : null}
+            />
+          </IconButton>
           <Typography variant="h6" className={classes.boldText}>
             {user.name}
           </Typography>
@@ -130,18 +168,22 @@ export default (props) => {
           <Typography variant="body1" className={classes.grayText}>
             bài đăng
           </Typography>
-          <Typography variant="h6" className={classes.boldText}>
-            {user.followers ? user.followers.length : 0}
-          </Typography>
-          <Typography variant="body1" className={classes.grayText}>
-            người theo dõi
-          </Typography>
-          <Typography variant="h6" className={classes.boldText}>
-            {user.followings ? user.following.length : 0}
-          </Typography>
-          <Typography variant="body1" className={classes.grayText}>
-            đang theo dõi
-          </Typography>
+          <ButtonBase focusRipple className={classes.flw}>
+            <Typography variant="h6" className={classes.boldText}>
+              {user.followers ? user.followers.length : 0}
+            </Typography>
+            <Typography variant="body1" className={classes.grayText}>
+              người theo dõi
+            </Typography>
+          </ButtonBase>
+          <ButtonBase focusRipple className={classes.flw}>
+            <Typography variant="h6" className={classes.boldText}>
+              {user.followings ? user.following.length : 0}
+            </Typography>
+            <Typography variant="body1" className={classes.grayText}>
+              đang theo dõi
+            </Typography>
+          </ButtonBase>
           <Button
             size="medium"
             color="primary"
@@ -171,6 +213,7 @@ export default (props) => {
           )}
         </div>
       </Container>
+      <AvatarDialog open={src != null} value={src} onClose={onCloseDialog} />
     </>
   );
 };
