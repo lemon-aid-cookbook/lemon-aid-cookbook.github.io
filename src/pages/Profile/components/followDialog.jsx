@@ -91,13 +91,13 @@ function FollowDialog(props) {
               <ListItem divider style={{ padding: 16 }} key={fl.followerId}>
                 <ListItemAvatar>
                   <Avatar
-                    src={fl.follower.avatar ? fl.follower.avatar : null}
+                    src={fl.user.avatar ? fl.user.avatar : null}
                     className={classes.avatar}
                   />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={fl.follower.name}
-                  secondary={fl.follower.email}
+                  primary={fl.user.name}
+                  secondary={fl.user.email}
                 />
                 {type === FLDIALOG_TYPES.FOLLOWING && (
                   <ListItemSecondaryAction>

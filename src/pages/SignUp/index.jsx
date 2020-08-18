@@ -55,13 +55,15 @@ function SignUp() {
     username: yup.string().trim().required("* Vui lòng nhập tên đăng nhập"),
   });
 
-  const handleLogin = (values) => {
-    dispatch(SignUpRequest.get(values));
+  const handleSignup = (values) => {
+    dispatch(
+      SignUpRequest.get({ ...values, username: values.username.toLowerCase() })
+    );
   };
 
   const handleKeyPress = (isValid, event, values) => {
     if (isValid && event.key === "Enter") {
-      handleLogin(values);
+      handleSignup(values);
     }
   };
 
@@ -89,7 +91,7 @@ function SignUp() {
             }}
             isInitialValid={false}
             validationSchema={validationSchema}
-            onSubmit={(values) => handleLogin(values)}
+            onSubmit={(values) => handleSignup(values)}
           >
             {({
               handleChange,
@@ -158,7 +160,7 @@ function SignUp() {
                       handleKeyPress(isValid, event, values)
                     }
                     style={styles.input}
-                    type='password'
+                    type="password"
                   />
                   <CTextField
                     helperText={
@@ -175,7 +177,7 @@ function SignUp() {
                       handleKeyPress(isValid, event, values)
                     }
                     style={styles.input}
-                    type='password'
+                    type="password"
                   />
                   <div style={{ alignSelf: "flex-end" }}>
                     <span>Đã có tài khoản?</span>
