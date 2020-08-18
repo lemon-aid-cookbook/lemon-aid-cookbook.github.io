@@ -34,7 +34,9 @@ function SignIn() {
   });
 
   const handleLogin = (values) => {
-    dispatch(SignInRequest.get(values));
+    dispatch(
+      SignInRequest.get({ ...values, username: values.username.toLowerCase() })
+    );
   };
 
   const handleKeyPress = (isValid, event, values) => {
@@ -105,7 +107,7 @@ function SignIn() {
                       handleKeyPress(isValid, event, values)
                     }
                     style={styles.input}
-                    type='password'
+                    type="password"
                   />
                   <div className="buttomBox">
                     <Button onClick={() => history.push("/forgot")}>
