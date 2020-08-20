@@ -1,9 +1,8 @@
 import { SignOut } from "pages/SignIn/redux/actions";
 import {
   GetProfile,
-  GetProfilePostFailed,
   GetProfilePostSuccess,
-  GetProfileSuccess,
+  GetProfileSuccess
 } from "./actions";
 
 const initialState = {
@@ -11,7 +10,6 @@ const initialState = {
   myPosts: [],
   followingPosts: [],
   userDetail: null,
-  isLoading: false,
 };
 
 export function profileReducer(state = initialState, action) {
@@ -19,7 +17,6 @@ export function profileReducer(state = initialState, action) {
     case GetProfile.type:
       return {
         ...state,
-        isLoading: true,
       };
     case GetProfileSuccess.type:
       return {
@@ -32,12 +29,6 @@ export function profileReducer(state = initialState, action) {
         favoritePosts: action.payload.favoritePosts,
         myPosts: action.payload.myPosts,
         followingPosts: action.payload.followingPosts,
-        isLoading: false,
-      };
-    case GetProfilePostFailed.type:
-      return {
-        ...state,
-        isLoading: false,
       };
     case SignOut.type:
       return {
@@ -45,7 +36,6 @@ export function profileReducer(state = initialState, action) {
         myPosts: [],
         followingPosts: [],
         userDetail: null,
-        isLoading: false,
       };
     default:
       return state;

@@ -1,3 +1,4 @@
+import { store } from "core/store";
 import { combineEpics, ofType } from "redux-observable";
 import { catchError, exhaustMap, map } from "rxjs/operators";
 import { request } from "ultis/api";
@@ -6,8 +7,14 @@ import {
   CreateRecipeFailed,
   CreateRecipeSuccess,
   GetDetailRecipe,
-  GetDetailRecipeSuccess,
   GetDetailRecipeFailed,
+  GetDetailRecipeSuccess,
+  LikePost,
+  LikePostFailed,
+  LikePostSuccess,
+  UnlikePost,
+  UnlikePostFailed,
+  UnlikePostSuccess,
 } from "./actions";
 
 const createRecipeEpic$ = (action$) =>
@@ -53,7 +60,59 @@ const getDetailRecipeEpic$ = (action$) =>
     })
   );
 
+const likePostEpic$ = (action$) =>
+  action$.pipe(
+    ofType(LikePost.type),
+    exhaustMap((action) => {
+      return request({
+        method: "POST",
+        url: "user/likepost",
+        param: action.payload,
+      }).pipe(
+        map((result) => {
+          if (result.status === 200) {
+            store.dispatch(
+              GetDetailRecipe.get({ postId: action.payload.postId })
+            );
+            return LikePostSuccess.get(result.data);
+          }
+          return LikePostFailed.get(result);
+        }),
+        catchError((error) => {
+          return LikePostFailed.get(error);
+        })
+      );
+    })
+  );
+
+const unlikePostEpic$ = (action$) =>
+  action$.pipe(
+    ofType(UnlikePost.type),
+    exhaustMap((action) => {
+      return request({
+        method: "POST",
+        url: "user/unlikepost",
+        param: action.payload,
+      }).pipe(
+        map((result) => {
+          if (result.status === 200) {
+            store.dispatch(
+              GetDetailRecipe.get({ postId: action.payload.postId })
+            );
+            return UnlikePostSuccess.get(result.data);
+          }
+          return UnlikePostFailed.get(result);
+        }),
+        catchError((error) => {
+          return UnlikePostFailed.get(error);
+        })
+      );
+    })
+  );
+
 export const recipeEpics = combineEpics(
   createRecipeEpic$,
-  getDetailRecipeEpic$
+  getDetailRecipeEpic$,
+  likePostEpic$,
+  unlikePostEpic$
 );

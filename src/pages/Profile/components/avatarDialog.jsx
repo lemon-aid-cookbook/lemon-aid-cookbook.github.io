@@ -38,7 +38,7 @@ function AvatarDialog(props) {
     dispatch(
       UpdateInformation.get({
         userId: user.id,
-        data: { name: user.name, avatar: cropped },
+        data: { avatar: cropped },
       })
     );
     onClose();

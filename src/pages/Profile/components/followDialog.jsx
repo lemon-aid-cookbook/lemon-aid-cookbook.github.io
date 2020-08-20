@@ -17,6 +17,7 @@ import React from "react";
 import { FiX } from "react-icons/fi";
 import "react-image-crop/dist/ReactCrop.css";
 import { useDispatch, useSelector } from "react-redux";
+import { Unfollow } from "../redux/actions";
 
 export const FLDIALOG_TYPES = {
   FOLLOWER: "FOLLOWER",
@@ -56,14 +57,14 @@ function FollowDialog(props) {
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
 
-  const { onClose, value, open, type } = props;
+  const { onClose, value, open, type, title } = props;
 
   const handleClose = () => {
     onClose();
   };
 
   const unfollow = (flId) => {
-    // dispatch(Unfollow.get({ userId: user.id, followerId: flId }));
+    dispatch(Unfollow.get({ userId: user.id, followerId: flId }));
   };
 
   return (
@@ -76,9 +77,7 @@ function FollowDialog(props) {
         <div className={classes.titleContainer}>
           <div style={{ flex: 1 }} />
           <Typography variant="h6" style={{ flex: 8 }}>
-            {type === FLDIALOG_TYPES.FOLLOWING
-              ? "Đang theo dõi"
-              : "Theo dõi bạn"}
+            {title}
           </Typography>
           <IconButton style={{ flex: 1 }} onClick={handleClose}>
             <FiX size={24} color="black" />
@@ -88,17 +87,14 @@ function FollowDialog(props) {
         {value && value.length > 0 ? (
           <List className={classes.list}>
             {value.map((fl) => (
-              <ListItem divider style={{ padding: 16 }} key={fl.followerId}>
+              <ListItem divider style={{ padding: 16 }} key={fl.id}>
                 <ListItemAvatar>
                   <Avatar
-                    src={fl.user.avatar ? fl.user.avatar : null}
+                    src={fl.user?.avatar ? fl.user?.avatar : null}
                     className={classes.avatar}
                   />
                 </ListItemAvatar>
-                <ListItemText
-                  primary={fl.user.name}
-                  secondary={fl.user.email}
-                />
+                <ListItemText primary={fl.user?.username} />
                 {type === FLDIALOG_TYPES.FOLLOWING && (
                   <ListItemSecondaryAction>
                     <Button
@@ -129,6 +125,7 @@ FollowDialog.defaultProps = {
   onClose: () => {},
   open: false,
   type: FLDIALOG_TYPES.FOLLOWING,
+  title: "",
 };
 
 export default FollowDialog;

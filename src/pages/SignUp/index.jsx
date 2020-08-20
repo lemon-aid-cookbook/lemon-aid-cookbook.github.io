@@ -42,16 +42,6 @@ function SignUp() {
         [yup.ref("password"), null],
         "Mật khẩu nhập lại phải khớp với mật khẩu đã nhập"
       ),
-    name: yup
-      .string()
-      .trim()
-      .required("* Vui lòng nhập họ và tên")
-      .matches(
-        /[^a-z0-9A-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/u,
-        {
-          message: "Họ tên không hợp lệ",
-        }
-      ),
     username: yup.string().trim().required("* Vui lòng nhập tên đăng nhập"),
   });
 
@@ -85,7 +75,6 @@ function SignUp() {
             initialValues={{
               email: "",
               password: "",
-              name: "",
               confirmPassword: "",
               username: "",
             }}
@@ -105,20 +94,6 @@ function SignUp() {
             }) => {
               return (
                 <Form className="formStyle">
-                  <CTextField
-                    helperText={errors.name && errors.name}
-                    FormHelperTextProps={{ classes: helperTextStyle }}
-                    label="Tên"
-                    variant="outlined"
-                    value={values.name}
-                    onChange={handleChange("name")}
-                    onTouchStart={() => setFieldTouched("name")}
-                    onBlur={handleBlur("name")}
-                    onKeyPress={(event) =>
-                      handleKeyPress(isValid, event, values)
-                    }
-                    style={styles.input}
-                  />
                   <CTextField
                     helperText={errors.username && errors.username}
                     FormHelperTextProps={{ classes: helperTextStyle }}
