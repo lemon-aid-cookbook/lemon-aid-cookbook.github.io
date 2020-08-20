@@ -17,6 +17,7 @@ import { COLOR } from "ultis/functions";
 import AppHeader from "../../components/Header/AppHeader";
 import AvatarDialog from "./components/avatarDialog";
 import FollowDialog, { FLDIALOG_TYPES } from "./components/followDialog";
+import UpdateInfoDialog from "./components/updateInformation";
 import { GetProfile } from "./redux/actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
+    minWidth: 180,
   },
   right: {
     display: "flex",
@@ -75,6 +77,7 @@ export default (props) => {
   const inputRef = useRef();
   const [src, setSrc] = useState(null);
   const [flDialog, setFlDialog] = useState(null);
+  const [infoDialog, setInfoDialog] = useState(false);
 
   useEffect(() => {
     dispatch(GetProfile.get(user));
@@ -121,15 +124,9 @@ export default (props) => {
     }
   };
 
-  const {
-    favoritePosts,
-    myPosts,
-    followingPosts,
-    isLoading,
-    userDetail,
-  } = profile;
+  const { favoritePosts, myPosts, followingPosts, userDetail } = profile;
 
-  if (isLoading || !userDetail) {
+  if (!userDetail) {
     return (
       <>
         <AppHeader />
@@ -165,7 +162,7 @@ export default (props) => {
             />
           </IconButton>
           <Typography variant="h6" className={classes.boldText}>
-            {userDetail.name}
+            {userDetail.username}
           </Typography>
           <Typography variant="body1" className={classes.grayText}>
             {userDetail.email}
@@ -205,7 +202,7 @@ export default (props) => {
             color="primary"
             variant="contained"
             className={classes.btnStyle}
-            onClick={() => {}}
+            onClick={() => setInfoDialog(true)}
           >
             Cập nhật thông tin
           </Button>
@@ -239,6 +236,15 @@ export default (props) => {
             : userDetail.followers
         }
         onClose={() => setFlDialog(null)}
+        title={
+          flDialog === FLDIALOG_TYPES.FOLLOWING
+            ? "Đang theo dõi"
+            : "Theo dõi bạn"
+        }
+      />
+      <UpdateInfoDialog
+        open={infoDialog}
+        onClose={() => setInfoDialog(false)}
       />
     </>
   );

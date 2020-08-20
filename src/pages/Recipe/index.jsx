@@ -1,20 +1,18 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { Container, CircularProgress } from "@material-ui/core";
-import AppHeader from "../../components/Header/AppHeader";
-import PostHeader from "./components/PostHeader";
-import PostDetails from "./components/PostDetails";
-import PostComments from "./components/PostComments";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { CircularProgress, Container } from "@material-ui/core";
 import { GetDetailRecipe } from "pages/RecipeCreate/redux/actions";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import AppHeader from "../../components/Header/AppHeader";
+import PostComments from "./components/PostComments";
+import PostDetails from "./components/PostDetails";
+import PostHeader from "./components/PostHeader";
 
 export default (props) => {
   const params = useParams();
   const { id } = params; // Recipe ID (The UUID was returned from API)
   const dispatch = useDispatch();
   const post = useSelector((state) => state.Recipe.detailRecipe);
-  const isLoading = useSelector((state) => state.Recipe.isLoadingDetail);
 
   useEffect(() => {
     dispatch(GetDetailRecipe.get({ postId: id }));
@@ -82,7 +80,7 @@ export default (props) => {
     ],
   });
 
-  if (isLoading || !post) {
+  if (!post || id !== post.id) {
     return (
       <>
         <AppHeader />
@@ -98,16 +96,17 @@ export default (props) => {
       <AppHeader />
       <Container maxWidth="md">
         <PostHeader
-          tags={recipe.tags}
           thumbnail={post.avatar}
           title={post.title}
           owner={post.author}
+          likes={post.likes}
+          postId={post.id}
         />
         <PostDetails
           readyTime={recipe.readyTime}
           cookTime={post.cookingTime}
           ration={recipe.ration}
-          rating={recipe.rating}
+          rating={post.likes}
           materials={post.ingredients}
           steps={post.content}
         />

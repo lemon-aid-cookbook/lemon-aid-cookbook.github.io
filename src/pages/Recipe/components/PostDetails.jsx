@@ -1,7 +1,11 @@
-import React from "react";
-import { Grid, Typography, Button } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import StarIcon from "@material-ui/icons/Star";
+import FollowDialog, {
+  FLDIALOG_TYPES,
+} from "pages/Profile/components/followDialog";
+import React, { useState } from "react";
+import { IoIosHeart } from "react-icons/io";
+import { COLOR } from "ultis/functions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +37,7 @@ export default (props) => {
   const { readyTime, cookTime, ration, rating, materials, steps } = props;
 
   const classes = useStyles();
+  const [dialog, setDialog] = useState(false);
 
   return (
     <>
@@ -47,9 +52,10 @@ export default (props) => {
           <Typography variant="body1">Nấu: {cookTime} phút</Typography>
           <Button
             size="small"
-            startIcon={<StarIcon style={{ color: "yellow" }} />}
+            startIcon={<IoIosHeart size={20} color={COLOR.primary} />}
+            onClick={() => setDialog(true)}
           >
-            {rating}
+            {rating ? rating.length : 0}
           </Button>
         </Grid>
       </Grid>
@@ -70,8 +76,8 @@ export default (props) => {
           <Typography variant="h6" color="primary">
             Các bước thực hiện
           </Typography>
-          {steps.map((step) => (
-            <div className="step">
+          {steps.map((step, index) => (
+            <div className="step" key={`step${index}`}>
               <Typography variant="body1" className={classes.stepStyle}>
                 <strong>Bước {step.stt}:</strong> {step.making}
               </Typography>
@@ -82,6 +88,13 @@ export default (props) => {
           ))}
         </div>
       )}
+      <FollowDialog
+        open={dialog}
+        type={FLDIALOG_TYPES.FOLLOWER}
+        value={rating}
+        onClose={() => setDialog(false)}
+        title="Lượt thích"
+      />
     </>
   );
 };

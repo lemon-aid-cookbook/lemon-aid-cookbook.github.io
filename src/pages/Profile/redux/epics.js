@@ -1,24 +1,24 @@
+import { store } from "core/store";
 import { combineEpics, ofType } from "redux-observable";
 import { catchError, exhaustMap, map } from "rxjs/operators";
 import { request } from "ultis/api";
 import {
+  Follow,
+  FollowFailed,
+  FollowSuccess,
+  GetProfile,
+  GetProfileFailed,
   GetProfilePost,
   GetProfilePostFailed,
   GetProfilePostSuccess,
-  UpdateInformation,
-  UpdateInformationSuccess,
-  UpdateInformationFailed,
   GetProfileSuccess,
-  GetProfileFailed,
-  GetProfile,
-  Follow,
-  FollowSuccess,
-  FollowFailed,
   Unfollow,
-  UnfollowSuccess,
   UnfollowFailed,
+  UnfollowSuccess,
+  UpdateInformation,
+  UpdateInformationFailed,
+  UpdateInformationSuccess,
 } from "./actions";
-import { store } from "core/store";
 
 const getProfilePostEpic$ = (action$) =>
   action$.pipe(
@@ -98,6 +98,7 @@ const followEpic$ = (action$) =>
       }).pipe(
         map((result) => {
           if (result.status === 200) {
+            store.dispatch(GetProfile.get(store.getState().Auth.user));
             return FollowSuccess.get(result.data);
           }
           return FollowFailed.get(result);
@@ -120,6 +121,7 @@ const unfollowEpic$ = (action$) =>
       }).pipe(
         map((result) => {
           if (result.status === 200) {
+            store.dispatch(GetProfile.get(store.getState().Auth.user));
             return UnfollowSuccess.get(result.data);
           }
           return UnfollowFailed.get(result);

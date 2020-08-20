@@ -1,19 +1,20 @@
+import { GlobalModalSetup } from "components/GlobalModal";
+import { GetProfile } from "pages/Profile/redux/actions";
 import { combineEpics, ofType } from "redux-observable";
 import { catchError, exhaustMap, map } from "rxjs/operators";
 import { request } from "ultis/api";
+import { history } from "ultis/functions";
 import {
-  SignInRequestFailed,
+  ResetPassword,
+  ResetPasswordFailed,
+  ResetPasswordSuccess,
   SignInRequest,
+  SignInRequestFailed,
   SignInRequestSuccess,
   SignUpRequest,
-  SignUpRequestSuccess,
   SignUpRequestFailed,
-  ResetPassword,
-  ResetPasswordSuccess,
-  ResetPasswordFailed,
+  SignUpRequestSuccess,
 } from "./actions";
-import { GlobalModalSetup } from "components/GlobalModal";
-import { history } from "ultis/functions";
 
 const signinEpic$ = (action$) =>
   action$.pipe(
@@ -36,6 +37,12 @@ const signinEpic$ = (action$) =>
         })
       );
     })
+  );
+
+const signinSuccessEpic$ = (action$) =>
+  action$.pipe(
+    ofType(SignInRequestSuccess.type),
+    map((action) => GetProfile.get(action.payload.user))
   );
 
 const signupEpic$ = (action$) =>
@@ -89,5 +96,6 @@ const resetPasswordEpic$ = (action$) =>
 export const authEpics = combineEpics(
   signinEpic$,
   signupEpic$,
-  resetPasswordEpic$
+  resetPasswordEpic$,
+  signinSuccessEpic$
 );
