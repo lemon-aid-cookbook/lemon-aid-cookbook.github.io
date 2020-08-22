@@ -23,7 +23,7 @@ export default () => {
       <Button
         color="inherit"
         variant="outlined"
-        onClick={() => history.push("signin")}
+        onClick={() => history.push("/signin")}
         className={classes.menuButton}
       >
         Đăng nhập
@@ -31,7 +31,7 @@ export default () => {
       <Button
         color="inherit"
         variant="outlined"
-        onClick={() => history.push("signup")}
+        onClick={() => history.push("/signup")}
         className={classes.menuButton}
       >
         Đăng ký

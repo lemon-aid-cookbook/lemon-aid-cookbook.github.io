@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Grid,
   Avatar,
@@ -6,29 +6,29 @@ import {
   InputLabel,
   Input,
   InputAdornment,
-  IconButton
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import SendIcon from '@material-ui/icons/Send'
+  IconButton,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import SendIcon from "@material-ui/icons/Send";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  }
-}))
+    marginBottom: theme.spacing(2),
+  },
+}));
 
-export default props => {
-  const { owner } = props
+export default (props) => {
+  const { owner } = props;
 
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <Grid container className={classes.root}>
       <Grid item xs={1}>
         <Grid container alignItems="center" direction="column" justify="center">
           <Grid item>
-            <Avatar src={owner.avatar} alt={owner.name} />
+            <Avatar src={owner.avatar} alt={owner.username} />
           </Grid>
         </Grid>
       </Grid>
@@ -50,5 +50,5 @@ export default props => {
         </FormControl>
       </Grid>
     </Grid>
-  )
-}
+  );
+};

@@ -9,70 +9,24 @@ import {
   Tabs,
   Typography,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Pagination } from "@material-ui/lab";
 import ListRecipes from "pages/Recipes/components/ListRecipes";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { COLOR } from "ultis/functions";
+import { LIMIT_ITEMS } from "ultis/functions";
 import AppHeader from "../../components/Header/AppHeader";
 import AvatarDialog from "./components/avatarDialog";
 import FollowDialog, { FLDIALOG_TYPES } from "./components/followDialog";
 import UpdateInfoDialog from "./components/updateInformation";
-import { GetProfile } from "./redux/actions";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-    display: "flex",
-    flexDirection: "row",
-  },
-  left: {
-    display: "flex",
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-    minWidth: 180,
-  },
-  right: {
-    display: "flex",
-    flex: 4,
-    flexDirection: "column",
-  },
-  large: {
-    width: theme.spacing(9),
-    height: theme.spacing(9),
-  },
-  btnStyle: {
-    borderRadius: 25,
-    marginTop: theme.spacing(3),
-  },
-  grayText: {
-    color: COLOR.deactiveGray,
-  },
-  boldText: {
-    marginTop: theme.spacing(2),
-  },
-  emptyText: {
-    marginTop: theme.spacing(3),
-  },
-  flw: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    borderRadius: 25,
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
-}));
+import { profileStyles, TAB_TYPES } from "./constants";
+import { GetProfile, GetProfilePost, SetProfileTab } from "./redux/actions";
 
 const tabs = ["Bài đăng", "Yêu thích", "Đang theo dõi"];
 
 export default (props) => {
-  const classes = useStyles();
+  const classes = profileStyles();
   const user = useSelector((state) => state.Auth.user);
   const profile = useSelector((state) => state.Profile);
-  const [tabIndex, setTabIndex] = useState(0);
   const dispatch = useDispatch();
   const inputRef = useRef();
   const [src, setSrc] = useState(null);
@@ -91,12 +45,36 @@ export default (props) => {
     };
   };
 
+  const onTabChange = (index) => {
+    dispatch(SetProfileTab.get({ tab: index, page: 1 }));
+    dispatch(
+      GetProfilePost.get({
+        userId: user.id,
+        limit: LIMIT_ITEMS,
+        page: 1,
+        type: TAB_TYPES[index],
+      })
+    );
+  };
+
+  const onPageChange = (index) => {
+    dispatch(SetProfileTab.get({ tab, page: index }));
+    dispatch(
+      GetProfilePost.get({
+        userId: user.id,
+        limit: LIMIT_ITEMS,
+        page: index,
+        type: TAB_TYPES[tab],
+      })
+    );
+  };
+
   const onCloseDialog = () => {
     setSrc(null);
   };
 
   const renderEmpty = () => {
-    switch (tabIndex) {
+    switch (profile.tab) {
       case 0:
         return (
           <Typography variant="body1" className={classes.emptyText}>
@@ -124,7 +102,15 @@ export default (props) => {
     }
   };
 
-  const { favoritePosts, myPosts, followingPosts, userDetail } = profile;
+  const {
+    userDetail,
+    tabPosts,
+    totalItems,
+    isLoadingRecipe,
+    page,
+    tab,
+  } = profile;
+  const totalPages = Math.ceil(totalItems / LIMIT_ITEMS);
 
   if (!userDetail) {
     return (
@@ -137,8 +123,6 @@ export default (props) => {
     );
   }
 
-  const posts =
-    tabIndex === 0 ? myPosts : tabIndex === 1 ? favoritePosts : followingPosts;
   return (
     <>
       <AppHeader />
@@ -168,7 +152,7 @@ export default (props) => {
             {userDetail.email}
           </Typography>
           <Typography variant="h6" className={classes.boldText}>
-            {myPosts ? myPosts.length : 0}
+            {userDetail.Posts ? userDetail.Posts.length : 0}
           </Typography>
           <Typography variant="body1" className={classes.grayText}>
             bài đăng
@@ -209,18 +193,29 @@ export default (props) => {
         </div>
         <div className={classes.right}>
           <Tabs
-            value={tabIndex}
+            value={profile.tab}
             indicatorColor="primary"
             textColor="primary"
-            onChange={(event, value) => setTabIndex(value)}
+            onChange={(event, value) => onTabChange(value)}
             aria-label="tab recipre"
           >
             {tabs.map((item) => (
               <Tab label={item} />
             ))}
           </Tabs>
-          {posts && posts.length > 0 ? (
-            <ListRecipes list={posts} />
+          {isLoadingRecipe ? (
+            <CircularProgress className={classes.loading} />
+          ) : tabPosts && tabPosts.length > 0 ? (
+            <>
+              <ListRecipes list={tabPosts} />
+              <Pagination
+                count={totalPages}
+                color="primary"
+                page={page}
+                style={{ alignSelf: "flex-end" }}
+                onChange={(event, value) => onPageChange(value)}
+              />
+            </>
           ) : (
             renderEmpty()
           )}

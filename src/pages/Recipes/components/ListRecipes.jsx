@@ -27,14 +27,13 @@ export default (props) => {
       {list && list.length > 0
         ? list.map((item) => (
             <CardRecipe
-              key={item.title}
+              key={item.id}
               title={item.title}
               image={item.avatar}
               to={item.id}
-              time={item.time}
-              star={item.star}
-              owner={item.owner}
-              avatar={item.avatar}
+              time={item.cookingTime}
+              star={item.likes}
+              owner={item.User}
               createdDate={item.createdAt}
             />
           ))

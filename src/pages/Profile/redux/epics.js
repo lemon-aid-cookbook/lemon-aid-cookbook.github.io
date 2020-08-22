@@ -19,6 +19,8 @@ import {
   UpdateInformationFailed,
   UpdateInformationSuccess,
 } from "./actions";
+import { TAB_TYPES } from "../constants";
+import { LIMIT_ITEMS } from "ultis/functions";
 
 const getProfilePostEpic$ = (action$) =>
   action$.pipe(
@@ -75,7 +77,14 @@ const getProfileEpic$ = (action$) =>
       }).pipe(
         map((result) => {
           if (result.status === 200) {
-            store.dispatch(GetProfilePost.get({ userId: action.payload.id }));
+            store.dispatch(
+              GetProfilePost.get({
+                userId: action.payload.id,
+                limit: LIMIT_ITEMS,
+                page: store.getState().Profile.page,
+                type: TAB_TYPES[store.getState().Profile.tab],
+              })
+            );
             return GetProfileSuccess.get(result.data);
           }
           return GetProfileFailed.get(result);

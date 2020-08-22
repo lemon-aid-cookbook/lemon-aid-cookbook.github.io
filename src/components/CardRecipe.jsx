@@ -1,17 +1,18 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import {
+  Avatar,
+  Button,
   Card,
   CardHeader,
   CardMedia,
-  Avatar,
-  Typography,
   Grid,
-  Button,
+  Typography,
 } from "@material-ui/core/";
+import { makeStyles } from "@material-ui/core/styles";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
-import StarIcon from "@material-ui/icons/Star";
+import React from "react";
+import { IoIosHeart } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { COLOR } from "ultis/functions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,7 +37,7 @@ export default (props) => {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} key={props.to}>
       <Link to={`recipe/${props.to}`} className={classes.link}>
         <CardMedia
           className={classes.media}
@@ -47,12 +48,12 @@ export default (props) => {
           <Grid container className={classes.content}>
             <Grid item xs={6}>
               <Button startIcon={<QueryBuilderIcon />} size="small">
-                {props.time}
+                {props.time} phút
               </Button>
             </Grid>
             <Grid item xs={6} style={{ textAlign: "right" }}>
               <Button
-                startIcon={<StarIcon style={{ color: "yellow" }} />}
+                startIcon={<IoIosHeart size={20} color={COLOR.primary} />}
                 size="small"
               >
                 {props.star}
@@ -64,9 +65,8 @@ export default (props) => {
           </Grid>
         </div>
         <CardHeader
-          avatar={<Avatar src={props.avatar} alt={props.owner} />}
-          title={props.owner}
-          subheader={props.createdDate}
+          avatar={<Avatar src={props.owner.avatar} alt={props.owner.id} />}
+          title={props.owner.username}
         />
       </Link>
     </Card>

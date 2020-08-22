@@ -38,7 +38,7 @@ export default () => {
         size="small"
         color="secondary"
         startIcon={<EditIcon />}
-        onClick={() => history.push("create")}
+        onClick={() => history.push("/create")}
         style={{ marginRight: 16 }}
       >
         Tạo bài đăng
@@ -61,7 +61,7 @@ export default () => {
       >
         <MenuItem
           onClick={() => {
-            history.push("profile");
+            history.push("/profile");
             handleMenuClose();
           }}
         >

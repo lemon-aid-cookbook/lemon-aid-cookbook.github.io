@@ -1,6 +1,7 @@
 import {
   Avatar,
   Button,
+  CircularProgress,
   Container,
   IconButton,
   Paper,
@@ -11,20 +12,27 @@ import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import { Formik } from "formik";
 import { helperTextStyles } from "pages/SignIn/constants";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import AppHeader from "../../components/Header/AppHeader";
-import ImageUpload from "./components/imageUpload";
-import { IMAGE_TYPE, recipeStyles, validationRecipeSchema } from "./constant";
-import { CreateRecipe } from "./redux/actions";
+import { useHistory, useParams } from "react-router-dom";
+import AppHeader from "../../../components/Header/AppHeader";
+import { IMAGE_TYPE, recipeStyles, validationRecipeSchema } from "../constant";
+import { GetDetailRecipe, UpdateRecipe } from "../redux/actions";
+import ImageUpload from "./imageUpload";
 
-export default (props) => {
+export default function UpdateRecipePage(props) {
+  const params = useParams();
+  const { id } = params;
   const classes = recipeStyles();
   const helperTextStyle = helperTextStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth.user);
+  const detail = useSelector((state) => state.Recipe.detailRecipe);
   const history = useHistory();
+
+  useEffect(() => {
+    dispatch(GetDetailRecipe.get({ postId: id }));
+  }, []);
 
   const addPictureStep = (steps, index, picture, setFieldValue) => {
     steps[index].image = picture;
@@ -38,14 +46,26 @@ export default (props) => {
 
   const submitRecipe = (values) => {
     dispatch(
-      CreateRecipe.get({
+      UpdateRecipe.get({
         ...values,
         ingredients: values.ingredients.join("|"),
         categories: values.categories.join("|"),
         userId: user?.id,
+        id: detail.id,
       })
     );
   };
+
+  if (!detail || id !== detail.id) {
+    return (
+      <>
+        <AppHeader />
+        <Container maxWidth="md" style={{ textAlign: "center" }}>
+          <CircularProgress style={{ marginTop: 64 }} />
+        </Container>
+      </>
+    );
+  }
 
   if (!user) {
     return (
@@ -57,7 +77,7 @@ export default (props) => {
           style={{ textAlign: "center" }}
         >
           <Typography variant="body1" style={{ margin: 28 }}>
-            Bạn chưa đăng nhập. Vui lòng đăng nhập để tạo bài viết.
+            Bạn chưa đăng nhập. Vui lòng đăng nhập để sửa bài viết.
           </Typography>
           <Button
             variant="contained"
@@ -72,21 +92,38 @@ export default (props) => {
     );
   }
 
+  if (user.id !== detail.userId) {
+    return (
+      <>
+        <AppHeader />
+        <Container
+          maxWidth="md"
+          className={classes.root}
+          style={{ textAlign: "center" }}
+        >
+          <Typography variant="body1" style={{ margin: 28 }}>
+            Bạn không thể sửa bài viết này.
+          </Typography>
+        </Container>
+      </>
+    );
+  }
+
   return (
     <>
       <AppHeader />
       <Formik
         initialValues={{
-          title: "",
-          description: "",
-          avatar: null,
-          ration: "",
-          cookingTime: 20,
-          difficultLevel: 1,
-          ingredients: [""],
-          categories: [],
-          hashtags: "",
-          steps: [{ stt: 1, making: "", image: null }],
+          title: detail.title,
+          description: detail.description,
+          avatar: detail.avatar,
+          ration: detail.ration,
+          cookingTime: detail.cookingTime,
+          difficultLevel: detail.difficultLevel,
+          ingredients: detail.ingredients,
+          categories: detail.categories,
+          hashtags: detail.hashtags,
+          steps: detail.content,
         }}
         isInitialValid={false}
         validationSchema={validationRecipeSchema}
@@ -105,7 +142,7 @@ export default (props) => {
         }) => {
           return (
             <Container maxWidth="md" className={classes.root}>
-              <Typography variant="h5">Tạo bài đăng</Typography>
+              <Typography variant="h5">Sửa bài đăng</Typography>
               <ImageUpload
                 type={IMAGE_TYPE.WIDE}
                 onChange={handleChange("avatar")}
@@ -323,7 +360,7 @@ export default (props) => {
                   disabled={!isValid}
                   onClick={handleSubmit}
                 >
-                  Đăng
+                  Cập nhật
                 </Button>
               </div>
             </Container>
@@ -332,4 +369,4 @@ export default (props) => {
       </Formik>
     </>
   );
-};
+}

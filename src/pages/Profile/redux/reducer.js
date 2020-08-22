@@ -1,41 +1,59 @@
 import { SignOut } from "pages/SignIn/redux/actions";
 import {
-  GetProfile,
   GetProfilePostSuccess,
-  GetProfileSuccess
+  GetProfileSuccess,
+  SetProfileTab,
+  GetProfilePost,
+  GetProfilePostFailed,
 } from "./actions";
 
 const initialState = {
-  favoritePosts: [],
-  myPosts: [],
-  followingPosts: [],
+  tabPosts: [],
+  totalItems: 0,
+  tab: 0,
+  page: 1,
   userDetail: null,
+  isLoadingRecipe: false,
 };
 
 export function profileReducer(state = initialState, action) {
   switch (action.type) {
-    case GetProfile.type:
-      return {
-        ...state,
-      };
     case GetProfileSuccess.type:
       return {
         ...state,
         userDetail: action.payload.userData,
       };
+    case GetProfilePost.type:
+      return {
+        ...state,
+        isLoadingRecipe: true,
+      };
     case GetProfilePostSuccess.type:
       return {
         ...state,
-        favoritePosts: action.payload.favoritePosts,
-        myPosts: action.payload.myPosts,
-        followingPosts: action.payload.followingPosts,
+        tabPosts: action.payload.posts,
+        totalItems: action.payload.totalItems,
+        isLoadingRecipe: false,
+      };
+    case GetProfilePostFailed.type:
+      return {
+        ...state,
+        isLoadingRecipe: false,
       };
     case SignOut.type:
       return {
-        favoritePosts: [],
-        myPosts: [],
-        followingPosts: [],
+        tabPosts: [],
         userDetail: null,
+        totalItems: 0,
+        tab: 0,
+        page: 1,
+        isLoadingRecipe: false,
+      };
+    case SetProfileTab.type:
+      return {
+        ...state,
+        tab: action.payload.tab,
+        page: action.payload.page,
       };
     default:
       return state;
