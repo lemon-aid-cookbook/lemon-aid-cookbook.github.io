@@ -74,7 +74,7 @@ function AvatarDialog(props) {
     canvas.toBlob((blob) => {
       reader.readAsDataURL(blob);
       reader.onloadend = () => {
-        setCropped(reader.result.substr(reader.result.lastIndexOf(",") + 1));
+        setCropped(reader.result);
       };
     });
   };

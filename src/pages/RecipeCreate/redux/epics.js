@@ -15,6 +15,12 @@ import {
   UnlikePost,
   UnlikePostFailed,
   UnlikePostSuccess,
+  UpdateRecipe,
+  UpdateRecipeSuccess,
+  UpdateRecipeFailed,
+  SearchRecipes,
+  SearchRecipesSuccess,
+  SearchRecipesFailed,
 } from "./actions";
 
 const createRecipeEpic$ = (action$) =>
@@ -39,6 +45,29 @@ const createRecipeEpic$ = (action$) =>
     })
   );
 
+const updateRecipeEpic$ = (action$) =>
+  action$.pipe(
+    ofType(UpdateRecipe.type),
+    exhaustMap((action) => {
+      return request({
+        method: "PUT",
+        url: `post/update/${action.payload.id}`,
+        param: action.payload,
+      }).pipe(
+        map((result) => {
+          if (result.status === 200) {
+            store.dispatch(GetDetailRecipe.get({ postId: action.payload.id }));
+            return UpdateRecipeSuccess.get(result.data);
+          }
+          return UpdateRecipeFailed.get(result);
+        }),
+        catchError((error) => {
+          return UpdateRecipeFailed.get(error);
+        })
+      );
+    })
+  );
+
 const getDetailRecipeEpic$ = (action$) =>
   action$.pipe(
     ofType(GetDetailRecipe.type),
@@ -55,6 +84,28 @@ const getDetailRecipeEpic$ = (action$) =>
         }),
         catchError((error) => {
           return GetDetailRecipeFailed.get(error);
+        })
+      );
+    })
+  );
+
+const searchRecipesEpic$ = (action$) =>
+  action$.pipe(
+    ofType(SearchRecipes.type),
+    exhaustMap((action) => {
+      return request({
+        method: "GET",
+        url: "post/search",
+        param: action.payload,
+      }).pipe(
+        map((result) => {
+          if (result.status === 200) {
+            return SearchRecipesSuccess.get(result.data);
+          }
+          return SearchRecipesFailed.get(result);
+        }),
+        catchError((error) => {
+          return SearchRecipesFailed.get(error);
         })
       );
     })
@@ -114,5 +165,7 @@ export const recipeEpics = combineEpics(
   createRecipeEpic$,
   getDetailRecipeEpic$,
   likePostEpic$,
-  unlikePostEpic$
+  unlikePostEpic$,
+  updateRecipeEpic$,
+  searchRecipesEpic$
 );

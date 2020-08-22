@@ -57,24 +57,20 @@ const useStyles = makeStyles((theme) => ({
 function ImageUpload(props) {
   const classes = useStyles();
   const inputRef = useRef();
-  const [src, setSrc] = useState(null);
 
   const addPictureStep = (picture) => {
     let reader = new FileReader();
     reader.readAsDataURL(picture);
     reader.onloadend = () => {
-      setSrc(reader.result);
-      const data = reader.result.substr(reader.result.lastIndexOf(",") + 1);
-      props.onChange(data);
+      props.onChange(reader.result);
     };
   };
 
   const removeImg = () => {
-    setSrc(null);
     props.onRemove();
   };
 
-  if (src) {
+  if (props.value) {
     return (
       <>
         <Paper
@@ -88,7 +84,7 @@ function ImageUpload(props) {
         >
           <span
             className={classes.imageSrc}
-            style={{ backgroundImage: `url("${src}")` }}
+            style={{ backgroundImage: `url("${props.value}")` }}
           />
           <IconButton className={classes.removeBtn} onClick={removeImg}>
             <FiX size={28} color="white" />
@@ -126,6 +122,7 @@ ImageUpload.defaultProps = {
   type: IMAGE_TYPE.NORMAL,
   onRemove: () => {},
   style: {},
+  value: null,
 };
 
 export default ImageUpload;

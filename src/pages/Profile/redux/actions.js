@@ -23,3 +23,5 @@ export const FollowFailed = defineAction("FOLLOW_FAILED");
 export const Unfollow = defineAction("UNFOLLOW");
 export const UnfollowSuccess = defineAction("UNFOLLOW_SUCCESS");
 export const UnfollowFailed = defineAction("UNFOLLOW_FAILED");
+
+export const SetProfileTab = defineAction("SET_PROFILE_TAB");

@@ -7,7 +7,6 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import { Formik } from "formik";
@@ -15,86 +14,13 @@ import { helperTextStyles } from "pages/SignIn/constants";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { COLOR } from "ultis/functions";
-import * as yup from "yup";
 import AppHeader from "../../components/Header/AppHeader";
 import ImageUpload from "./components/imageUpload";
-import { IMAGE_TYPE } from "./constant";
+import { IMAGE_TYPE, recipeStyles, validationRecipeSchema } from "./constant";
 import { CreateRecipe } from "./redux/actions";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  thumbnail: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3),
-    width: "100%",
-    borderRadius: "1rem",
-  },
-  group: {
-    marginBottom: theme.spacing(2),
-  },
-  field: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-  paper: {
-    padding: "2px 4px",
-    display: "flex",
-    alignItems: "center",
-  },
-  iconButton: {
-    padding: 10,
-  },
-  add: {
-    marginRight: theme.spacing(2),
-  },
-  stepNum: {
-    width: "30px",
-    height: "30px",
-    marginRight: theme.spacing(1),
-    backgroundColor: COLOR.primary,
-  },
-  button: {
-    paddingLeft: "4rem",
-    paddingRight: "4rem",
-    borderRadius: 25,
-  },
-  errorStyle: {
-    fontSize: "0.8rem",
-    color: "red",
-  },
-}));
-
-const stepsSchema = yup.object({
-  stt: yup.number(),
-  making: yup.string().trim().required("* Vui lòng nhập bước thực hiện"),
-});
-
-const validationSchema = yup.object().shape({
-  title: yup
-    .string()
-    .trim()
-    .required("* Vui lòng nhập tiêu đề")
-    .max(255, "Tiêu đề không được quá 255 kí tự"),
-  ingredients: yup
-    .array()
-    .required("* Vui lòng thêm ít nhất 1 nguyên liệu")
-    .of(yup.string().required("* Vui lòng nhập nguyên liệu")),
-  steps: yup
-    .array()
-    .required("* Vui lòng thêm ít nhất 1 bước thực hiện")
-    .of(stepsSchema),
-  avatar: yup
-    .string()
-    .nullable()
-    .required("* Vui chọn hình đại diện cho công thức"),
-});
-
 export default (props) => {
-  const classes = useStyles();
+  const classes = recipeStyles();
   const helperTextStyle = helperTextStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth.user);
@@ -115,6 +41,7 @@ export default (props) => {
       CreateRecipe.get({
         ...values,
         ingredients: values.ingredients.join("|"),
+        categories: values.categories.join("|"),
         userId: user?.id,
       })
     );
@@ -136,7 +63,7 @@ export default (props) => {
             variant="contained"
             color="primary"
             className={classes.button}
-            onClick={() => history.replace("signin")}
+            onClick={() => history.push("/signin")}
           >
             Đăng nhập
           </Button>
@@ -157,12 +84,12 @@ export default (props) => {
           cookingTime: 20,
           difficultLevel: 1,
           ingredients: [""],
-          categories: "",
+          categories: [],
           hashtags: "",
           steps: [{ stt: 1, making: "", image: null }],
         }}
         isInitialValid={false}
-        validationSchema={validationSchema}
+        validationSchema={validationRecipeSchema}
         onSubmit={(values) => submitRecipe(values)}
       >
         {({
@@ -183,6 +110,7 @@ export default (props) => {
                 type={IMAGE_TYPE.WIDE}
                 onChange={handleChange("avatar")}
                 onRemove={() => setFieldValue("avatar", null)}
+                value={values.avatar}
               />
               {errors.avatar && (
                 <Typography variant="body2" className={classes.errorStyle}>
@@ -348,6 +276,7 @@ export default (props) => {
                           removePictureStep(values.steps, i, setFieldValue)
                         }
                         style={{ marginLeft: 40 }}
+                        value={step.image}
                       />
                     </div>
                   ))}

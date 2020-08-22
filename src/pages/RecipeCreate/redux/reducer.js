@@ -2,6 +2,7 @@ import { GetDetailRecipeSuccess } from "./actions";
 
 const initialState = {
   detailRecipe: null,
+  searchResult: [],
 };
 
 export function recipeReducer(state = initialState, action) {

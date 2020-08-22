@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FollowDialog, {
   FLDIALOG_TYPES,
@@ -34,31 +34,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default (props) => {
-  const { readyTime, cookTime, ration, rating, materials, steps } = props;
+  const { cookTime, ration, rating, materials, steps } = props;
 
   const classes = useStyles();
   const [dialog, setDialog] = useState(false);
 
   return (
     <>
-      <Grid container className={classes.root}>
-        <Grid item xs={3}>
-          <Typography variant="body1">
-            Thời gian chuẩn bị: {readyTime} phút
-          </Typography>
-          <Typography variant="body1">Khẩu phần: {ration} người</Typography>
-        </Grid>
-        <Grid item xs={9}>
-          <Typography variant="body1">Nấu: {cookTime} phút</Typography>
-          <Button
-            size="small"
-            startIcon={<IoIosHeart size={20} color={COLOR.primary} />}
-            onClick={() => setDialog(true)}
-          >
-            {rating ? rating.length : 0}
-          </Button>
-        </Grid>
-      </Grid>
+      <Button
+        size="medium"
+        startIcon={<IoIosHeart size={20} color={COLOR.primary} />}
+        onClick={() => setDialog(true)}
+      >
+        {rating ? rating.length : 0}
+      </Button>
+      <Typography variant="body1">
+        <strong>Thời gian thực hiện:</strong> {cookTime} phút
+      </Typography>
+      <Typography variant="body1">
+        <strong>Khẩu phần:</strong> {ration} người
+      </Typography>
       {materials && materials.length > 0 && (
         <div className="materials">
           <Typography variant="h6" color="primary">

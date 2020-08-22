@@ -103,7 +103,6 @@ export default (props) => {
           postId={post.id}
         />
         <PostDetails
-          readyTime={recipe.readyTime}
           cookTime={post.cookingTime}
           ration={recipe.ration}
           rating={post.likes}
@@ -111,7 +110,7 @@ export default (props) => {
           steps={post.content}
         />
         <hr style={{ margin: "2rem 0" }} />
-        <PostComments owner={recipe.owner} comments={recipe.comments} />
+        <PostComments comments={post.Comments} />
       </Container>
     </>
   );

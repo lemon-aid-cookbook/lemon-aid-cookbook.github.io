@@ -101,7 +101,7 @@ function FollowDialog(props) {
                       color="primary"
                       variant="contained"
                       className={classes.btnStyle}
-                      onClick={() => unfollow(fl.followerId)}
+                      onClick={() => unfollow(fl.user?.id)}
                     >
                       Bỏ theo dõi
                     </Button>

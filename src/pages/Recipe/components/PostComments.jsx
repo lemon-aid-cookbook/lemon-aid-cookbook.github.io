@@ -1,29 +1,31 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
-import CommentSend from '../../../components/Comment/CommentSend'
-import CommentView from '../../../components/Comment/CommentView'
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
+import CommentSend from "components/Comment/CommentSend";
+import CommentView from "components/Comment/CommentView";
+import { useSelector } from "react-redux";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  }
-}))
+    marginBottom: theme.spacing(2),
+  },
+}));
 
-export default props => {
-  const { owner, comments } = props
+export default (props) => {
+  const { comments } = props;
+  const user = useSelector((state) => state.Auth.user);
 
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Typography variant="h6" color="primary">
         Thảo luận
       </Typography>
-      <CommentSend owner={owner} />
+      <CommentSend owner={user} />
       <CommentView comments={comments} />
       <a href="#!">Xem tất cả thảo luận</a>
     </div>
-  )
-}
+  );
+};

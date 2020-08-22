@@ -28,7 +28,7 @@ export function request(param) {
   return from(
     axios.request({
       url,
-      timeout: 12000,
+      timeout: 15000,
       headers,
       method: param.method || "POST",
       data: parameters,
@@ -40,8 +40,10 @@ export function request(param) {
     map((result) => {
       return result;
     }),
-    tap((result) => log(url, parameters, result)),
-    catchError((error) => console.log(error))
+    catchError((error) => {
+      return error;
+    }),
+    tap((result) => log(url, parameters, result))
   );
 }
 
