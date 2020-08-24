@@ -1,72 +1,71 @@
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import { Form, Formik } from "formik";
-import React, { useEffect } from "react";
-import GoogleLogin from "react-google-login";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { CLIENT_ID, COLOR } from "ultis/functions";
-import * as yup from "yup";
-import { CTextField, helperTextStyles, styles } from "./constants";
-import { SignInRequest } from "./redux/actions";
-import "./signin.css";
+import Button from '@material-ui/core/Button'
+import { Form, Formik } from 'formik'
+import React, { useEffect } from 'react'
+import GoogleLogin from 'react-google-login'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { CLIENT_ID, COLOR } from 'ultis/functions'
+import * as yup from 'yup'
+import { CTextField, helperTextStyles, styles } from './constants'
+import { SignInRequest } from './redux/actions'
+import './signin.css'
 
 function SignIn() {
-  const history = useHistory();
-  const dispatch = useDispatch();
-  const helperTextStyle = helperTextStyles();
-  const user = useSelector((state) => state.Auth?.user);
+  const history = useHistory()
+  const dispatch = useDispatch()
+  const helperTextStyle = helperTextStyles()
+  const user = useSelector(state => state.Auth?.user)
 
   useEffect(() => {
     if (user) {
-      history.push("/");
+      history.replace('/')
     }
-  }, []);
+  }, [])
 
   const validationSchema = yup.object().shape({
     password: yup
       .string()
-      .required("* Vui lòng nhập mật khẩu")
+      .required('* Vui lòng nhập mật khẩu')
       .matches(/(?=.{8,})/, {
-        message: "Mật khẩu phải gồm 8 kí tự",
+        message: 'Mật khẩu phải gồm 8 kí tự'
       }),
-    username: yup.string().trim().required("* Vui lòng nhập tên đăng nhập"),
-  });
+    username: yup.string().trim().required('* Vui lòng nhập tên đăng nhập')
+  })
 
-  const handleLogin = (values) => {
+  const handleLogin = values => {
     dispatch(
       SignInRequest.get({ ...values, username: values.username.toLowerCase() })
-    );
-  };
+    )
+  }
 
   const handleKeyPress = (isValid, event, values) => {
-    if (isValid && event.key === "Enter") {
-      handleLogin(values);
+    if (isValid && event.key === 'Enter') {
+      handleLogin(values)
     }
-  };
+  }
 
-  const responseGoogle = (response) => {
+  const responseGoogle = response => {
     // console.log(response);
     // var res = response.profileObj;
     // console.log(res);
-  };
+  }
 
   return (
     <div id="bg">
       <div id="loginBg">
-        <a href="/" style={{ textDecoration: "none", color: "white" }}>
+        <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
           <span className="dimoName">Lemon-aid</span>
         </a>
         <div id="loginBox">
           <span id="loginStyle">Đăng nhập</span>
           <Formik
             initialValues={{
-              password: "",
-              username: "",
+              password: '',
+              username: ''
             }}
             isInitialValid={false}
             validationSchema={validationSchema}
-            onSubmit={(values) => handleLogin(values)}
+            onSubmit={values => handleLogin(values)}
           >
             {({
               handleChange,
@@ -76,7 +75,7 @@ function SignIn() {
               isValid,
               errors,
               touched,
-              setFieldTouched,
+              setFieldTouched
             }) => {
               return (
                 <Form className="formStyle">
@@ -86,38 +85,35 @@ function SignIn() {
                     label="Tên đăng nhập"
                     variant="outlined"
                     value={values.username}
-                    onChange={handleChange("username")}
-                    onTouchStart={() => setFieldTouched("username")}
-                    onBlur={handleBlur("username")}
-                    onKeyPress={(event) =>
-                      handleKeyPress(isValid, event, values)
-                    }
+                    onChange={handleChange('username')}
+                    onTouchStart={() => setFieldTouched('username')}
+                    onBlur={handleBlur('username')}
+                    onKeyPress={event => handleKeyPress(isValid, event, values)}
                     style={styles.input}
+                    autoFocus
                   />
                   <CTextField
                     helperText={errors.password && errors.password}
                     FormHelperTextProps={{ classes: helperTextStyle }}
                     label="Mật khẩu"
                     variant="outlined"
-                    onChange={handleChange("password")}
-                    onTouchStart={() => setFieldTouched("password")}
+                    onChange={handleChange('password')}
+                    onTouchStart={() => setFieldTouched('password')}
                     value={values.password}
-                    onBlur={handleBlur("password")}
-                    onKeyPress={(event) =>
-                      handleKeyPress(isValid, event, values)
-                    }
+                    onBlur={handleBlur('password')}
+                    onKeyPress={event => handleKeyPress(isValid, event, values)}
                     style={styles.input}
                     type="password"
                   />
                   <div className="buttomBox">
-                    <Button onClick={() => history.push("/forgot")}>
+                    <Button onClick={() => history.push('/forgot')}>
                       Quên mật khẩu
                     </Button>
                     <div>
                       <span>Chưa có tài khoản?</span>
                       <Button
                         color="primary"
-                        onClick={() => history.push("/signup")}
+                        onClick={() => history.push('/signup')}
                       >
                         Đăng ký
                       </Button>
@@ -129,15 +125,15 @@ function SignIn() {
                     style={{
                       backgroundColor: isValid
                         ? COLOR.primary
-                        : COLOR.deactiveGray,
+                        : COLOR.deactiveGray
                     }}
                     onClick={handleSubmit}
-                    size={"large"}
+                    size={'large'}
                   >
                     Đăng nhập
                   </Button>
                 </Form>
-              );
+              )
             }}
           </Formik>
           <GoogleLogin
@@ -149,12 +145,12 @@ function SignIn() {
         </div>
       </div>
       <div id="imgBg">
-        <img src={require("../../assets/signin_img.svg")} alt="img" />
+        <img src={require('../../assets/signin_img.svg')} alt="img" />
         <span className="tagline">Vào bếp không khó</span>
         <span className="tagline">Có Lemon-aid lo</span>
       </div>
     </div>
-  );
+  )
 }
 
-export default SignIn;
+export default SignIn

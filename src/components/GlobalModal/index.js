@@ -1,4 +1,4 @@
-import GlobalModal from "./GlobalModal";
-import GlobalModalSetup from "./GlobalModalSetup";
+import GlobalModal from './GlobalModal'
+import GlobalModalSetup from './GlobalModalSetup'
 
-export { GlobalModal, GlobalModalSetup };
+export { GlobalModal, GlobalModalSetup }
