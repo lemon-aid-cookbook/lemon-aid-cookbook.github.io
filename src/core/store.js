@@ -1,29 +1,37 @@
-import { applyMiddleware, createStore } from "redux";
-import logger from "redux-logger";
-import { createEpicMiddleware } from "redux-observable";
-import { rootEpic } from "./epic";
-import { rootReducer } from "./reducer";
-import { __DEV__ } from "ultis/functions";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import { routerMiddleware } from 'connected-react-router'
+import { applyMiddleware, compose, createStore } from 'redux'
+import logger from 'redux-logger'
+import { createEpicMiddleware } from 'redux-observable'
+import { persistReducer, persistStore } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+import { history, __DEV__ } from 'ultis/functions'
+import { rootEpic } from './epic'
+import { rootReducer } from './reducer'
 
-const epicMiddleware = createEpicMiddleware();
+const epicMiddleware = createEpicMiddleware()
 
-const applyMiddlewarePro = applyMiddleware(epicMiddleware);
-const applyMiddlewareDev = applyMiddleware(logger, epicMiddleware);
+const applyMiddlewarePro = applyMiddleware(
+  epicMiddleware,
+  routerMiddleware(history)
+)
+const applyMiddlewareDev = applyMiddleware(
+  logger,
+  epicMiddleware,
+  routerMiddleware(history)
+)
 
 const persistConfig = {
-  key: "root",
-  storage,
-};
+  key: 'root',
+  storage
+}
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = createStore(
   persistedReducer,
-  __DEV__ ? applyMiddlewareDev : applyMiddlewarePro
-);
+  __DEV__ ? compose(applyMiddlewareDev) : compose(applyMiddlewarePro)
+)
 
-epicMiddleware.run(rootEpic);
+epicMiddleware.run(rootEpic)
 
-export const persistor = persistStore(store);
+export const persistor = persistStore(store)

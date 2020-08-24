@@ -1,70 +1,71 @@
-import axios from "axios";
-import { from } from "rxjs";
-import { map, tap, catchError } from "rxjs/operators";
-import { DOMAIN, log as SysLog, __DEV__ } from "ultis/functions";
-import { store } from "core/store";
+import axios from 'axios'
+import { store } from 'core/store'
+import { from } from 'rxjs'
+import { map, tap } from 'rxjs/operators'
+import { DOMAIN, log as SysLog } from 'ultis/functions'
 
 export function request(param) {
-  let url = `${DOMAIN}/${param.url}`;
+  let url = `${DOMAIN}/${param.url}`
 
-  const language = "vi";
-  const parameters = param.param;
-  const token = store.getState().Auth.token;
+  const language = 'vi'
+  const parameters = param.param
+  const token = store.getState().Auth.token
   const headers = token
     ? {
-        "Content-Type": "application/json",
-        accept: "application/json",
-        "Access-Control-Allow-Origin": true,
-        "Accept-Language": language,
-        Authorization: token,
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        'Access-Control-Allow-Origin': true,
+        'Accept-Language': language,
+        Authorization: token
       }
     : {
-        "Content-Type": "application/json",
-        accept: "application/json",
-        "Access-Control-Allow-Origin": true,
-        "Accept-Language": language,
-      };
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        'Access-Control-Allow-Origin': true,
+        'Accept-Language': language
+      }
 
   return from(
-    axios.request({
-      url,
-      timeout: 15000,
-      headers,
-      method: param.method || "POST",
-      data: parameters,
-      ...(param.method === "GET"
-        ? { params: parameters, data: {} }
-        : { data: parameters }),
-    })
+    axios
+      .request({
+        url,
+        timeout: 15000,
+        headers,
+        method: param.method || 'POST',
+        data: parameters,
+        ...(param.method === 'GET'
+          ? { params: parameters, data: {} }
+          : { data: parameters })
+      })
+      .catch(error => {
+        return Promise.resolve(error.response)
+      })
   ).pipe(
-    map((result) => {
-      return result;
+    map(result => {
+      return result
     }),
-    catchError((error) => {
-      return error;
-    }),
-    tap((result) => log(url, parameters, result))
-  );
+    tap(result => log(url, parameters, result))
+  )
 }
 
 function log(url, parameters, result) {
   SysLog(
-    "--------------------------\n",
+    '--------------------------\n',
     // '\x1b[34m',
-    "Request data:",
+    'Request data:',
     // '\x1b[37m',
-    "\nURL:           ",
+    '\nURL:           ',
     // '\x1b[32m',
     url,
     // '\x1b[37m',
-    "\nParam:         ",
+    '\nParam:         ',
     // '\x1b[32m',
-    JSON.stringify(parameters, null, "\x1b[32m"),
+    JSON.stringify(parameters, null, '\x1b[32m'),
     // '\x1b[37m',
-    "\nResponse Data: ",
+    '\nResponse Data: ',
     // '\x1b[32m',
-    JSON.stringify(result, null, "\x1b[32m") || true,
+    JSON.stringify(result, null, '\x1b[32m') || true,
     // '\x1b[37m',
-    "\n--------------------------"
-  );
+    '\n--------------------------'
+  )
 }
