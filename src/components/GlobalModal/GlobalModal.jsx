@@ -64,6 +64,7 @@ class GlobalModal extends React.Component {
                 onClick={() => this.closeModal()}
                 color="primary"
                 variant="contained"
+                style={{ backgroundColor: 'red' }}
               >
                 Hủy
               </Button>

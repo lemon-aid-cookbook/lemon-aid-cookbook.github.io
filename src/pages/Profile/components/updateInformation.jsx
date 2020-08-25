@@ -4,77 +4,77 @@ import {
   Divider,
   IconButton,
   Paper,
-  Typography,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { Form, Formik } from "formik";
-import { CTextField, helperTextStyles, styles } from "pages/SignIn/constants";
-import React from "react";
-import { FiX } from "react-icons/fi";
-import "react-image-crop/dist/ReactCrop.css";
-import { useDispatch, useSelector } from "react-redux";
-import { COLOR } from "ultis/functions";
-import * as yup from "yup";
+  Typography
+} from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import { Form, Formik } from 'formik'
+import { CTextField, helperTextStyles, styles } from 'pages/SignIn/constants'
+import React from 'react'
+import { FiX } from 'react-icons/fi'
+import 'react-image-crop/dist/ReactCrop.css'
+import { useDispatch } from 'react-redux'
+import { COLOR } from 'ultis/functions'
+import * as yup from 'yup'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    textAlign: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    textAlign: 'center'
   },
   titleContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    height: 64,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 64
   },
   btnStyle: {
     borderRadius: 25,
     paddingLeft: 28,
-    paddingRight: 28,
-  },
-}));
+    paddingRight: 28
+  }
+}))
 
 const validationSchema = yup.object().shape({
-  password: yup
-    .string()
-    .required("* Vui lòng nhập mật khẩu mới")
-    .matches(/(?=.{8,})/, {
-      message: "Mật khẩu phải gồm 8 kí tự",
-    }),
   oldPass: yup
     .string()
-    .required("* Vui lòng nhập mật khẩu cũ")
+    .required('* Vui lòng nhập mật khẩu cũ')
     .matches(/(?=.{8,})/, {
-      message: "Mật khẩu phải gồm 8 kí tự",
+      message: 'Mật khẩu phải gồm 8 kí tự'
     }),
+  password: yup
+    .string()
+    .required('* Vui lòng nhập mật khẩu mới')
+    .matches(/(?=.{8,})/, {
+      message: 'Mật khẩu phải gồm 8 kí tự'
+    })
+    .notOneOf([yup.ref('oldPass'), null], 'Mật khẩu mới phải khác mật khẩu cũ'),
   confirmPassword: yup
     .string()
-    .required("* Vui lòng nhập lại mật khẩu mới")
+    .required('* Vui lòng nhập lại mật khẩu mới')
     .oneOf(
-      [yup.ref("password"), null],
-      "Mật khẩu nhập lại phải khớp với mật khẩu đã nhập"
-    ),
-});
+      [yup.ref('password'), null],
+      'Mật khẩu nhập lại phải khớp với mật khẩu đã nhập'
+    )
+})
 
 function UpdateInfoDialog(props) {
-  const classes = useStyles();
-  const helperTextStyle = helperTextStyles();
-  const user = useSelector((state) => state.Profile.userDetail);
-  const dispatch = useDispatch();
+  const classes = useStyles()
+  const helperTextStyle = helperTextStyles()
+  const dispatch = useDispatch()
 
-  const { onClose, open } = props;
+  const { onClose, open } = props
 
   const handleClose = () => {
-    onClose();
-  };
+    onClose()
+  }
 
   const handleKeyPress = (isValid, event, values) => {
-    if (isValid && event.key === "Enter") {
+    if (isValid && event.key === 'Enter') {
       // handleSignup(values);
     }
-  };
+  }
 
   return (
     <Dialog
@@ -95,13 +95,13 @@ function UpdateInfoDialog(props) {
         <Divider />
         <Formik
           initialValues={{
-            oldPass: "",
-            password: "",
-            confirmPassword: "",
+            oldPass: '',
+            password: '',
+            confirmPassword: ''
           }}
           isInitialValid={false}
           validationSchema={validationSchema}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={values => console.log(values)}
         >
           {({
             handleChange,
@@ -111,45 +111,47 @@ function UpdateInfoDialog(props) {
             isValid,
             errors,
             touched,
-            setFieldTouched,
+            setFieldTouched
           }) => {
             return (
               <Form style={{ padding: 24 }}>
                 <CTextField
                   helperText={errors.oldPass && errors.oldPass}
                   FormHelperTextProps={{ classes: helperTextStyle }}
-                  label="Tên"
+                  label="Mật khẩu cũ"
                   variant="outlined"
                   value={values.oldPass}
-                  onChange={handleChange("oldPass")}
-                  onTouchStart={() => setFieldTouched("oldPass")}
-                  onBlur={handleBlur("oldPass")}
-                  onKeyPress={(event) => handleKeyPress(isValid, event, values)}
+                  onChange={handleChange('oldPass')}
+                  onTouchStart={() => setFieldTouched('oldPass')}
+                  onBlur={handleBlur('oldPass')}
+                  onKeyPress={event => handleKeyPress(isValid, event, values)}
                   style={styles.input}
+                  type="password"
+                  autoFocus
                 />
                 <CTextField
                   helperText={errors.password && errors.password}
                   FormHelperTextProps={{ classes: helperTextStyle }}
-                  label="Mật khẩu"
+                  label="Mật khẩu mới"
                   variant="outlined"
-                  onChange={handleChange("password")}
-                  onTouchStart={() => setFieldTouched("password")}
+                  onChange={handleChange('password')}
+                  onTouchStart={() => setFieldTouched('password')}
                   value={values.password}
-                  onBlur={handleBlur("password")}
-                  onKeyPress={(event) => handleKeyPress(isValid, event, values)}
+                  onBlur={handleBlur('password')}
+                  onKeyPress={event => handleKeyPress(isValid, event, values)}
                   style={styles.input}
                   type="password"
                 />
                 <CTextField
                   helperText={errors.confirmPassword && errors.confirmPassword}
                   FormHelperTextProps={{ classes: helperTextStyle }}
-                  label="Nhập lại mật khẩu"
+                  label="Nhập lại mật khẩu mới"
                   variant="outlined"
-                  onChange={handleChange("confirmPassword")}
-                  onTouchStart={() => setFieldTouched("confirmPassword")}
+                  onChange={handleChange('confirmPassword')}
+                  onTouchStart={() => setFieldTouched('confirmPassword')}
                   value={values.confirmPassword}
-                  onBlur={handleBlur("confirmPassword")}
-                  onKeyPress={(event) => handleKeyPress(isValid, event, values)}
+                  onBlur={handleBlur('confirmPassword')}
+                  onKeyPress={event => handleKeyPress(isValid, event, values)}
                   style={styles.input}
                   type="password"
                 />
@@ -159,7 +161,7 @@ function UpdateInfoDialog(props) {
                   style={{
                     backgroundColor: isValid
                       ? COLOR.primary
-                      : COLOR.deactiveGray,
+                      : COLOR.deactiveGray
                   }}
                   onClick={handleSubmit}
                   size="medium"
@@ -169,17 +171,17 @@ function UpdateInfoDialog(props) {
                   Cập nhật
                 </Button>
               </Form>
-            );
+            )
           }}
         </Formik>
       </Paper>
     </Dialog>
-  );
+  )
 }
 
 UpdateInfoDialog.defaultProps = {
   onClose: () => {},
-  open: false,
-};
+  open: false
+}
 
-export default UpdateInfoDialog;
+export default UpdateInfoDialog

@@ -47,7 +47,11 @@ function SignUp() {
 
   const handleSignup = values => {
     dispatch(
-      SignUpRequest.get({ ...values, username: values.username.toLowerCase() })
+      SignUpRequest.get({
+        ...values,
+        username: values.username.toLowerCase(),
+        email: values.email.toLowerCase()
+      })
     )
   }
 

@@ -67,7 +67,6 @@ export default () => {
         >
           Trang cá nhân
         </MenuItem>
-        <MenuItem onClick={handleMenuClose}>Yêu thích</MenuItem>
         <MenuItem
           onClick={() => {
             dispatch(SignOut.get());

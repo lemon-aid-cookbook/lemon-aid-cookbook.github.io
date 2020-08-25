@@ -1,165 +1,277 @@
-import { store } from "core/store";
-import { combineEpics, ofType } from "redux-observable";
-import { catchError, exhaustMap, map } from "rxjs/operators";
-import { request } from "ultis/api";
+import { GlobalModalSetup } from 'components/GlobalModal'
+import { store } from 'core/store'
+import { combineEpics, ofType } from 'redux-observable'
+import { catchError, exhaustMap, map } from 'rxjs/operators'
+import { request } from 'ultis/api'
+import { history, MODAL_TYPE } from 'ultis/functions'
 import {
+  CommentPost,
+  CommentPostFailed,
+  CommentPostSuccess,
   CreateRecipe,
   CreateRecipeFailed,
   CreateRecipeSuccess,
+  DeleteComment,
+  DeleteCommentFailed,
+  DeleteCommentSuccess,
+  DeleteRecipe,
+  DeleteRecipeFailed,
+  DeleteRecipeSuccess,
   GetDetailRecipe,
   GetDetailRecipeFailed,
   GetDetailRecipeSuccess,
   LikePost,
   LikePostFailed,
   LikePostSuccess,
+  SearchRecipes,
+  SearchRecipesFailed,
+  SearchRecipesSuccess,
   UnlikePost,
   UnlikePostFailed,
   UnlikePostSuccess,
   UpdateRecipe,
-  UpdateRecipeSuccess,
   UpdateRecipeFailed,
-  SearchRecipes,
-  SearchRecipesSuccess,
-  SearchRecipesFailed,
-} from "./actions";
+  UpdateRecipeSuccess
+} from './actions'
 
-const createRecipeEpic$ = (action$) =>
+const createRecipeEpic$ = action$ =>
   action$.pipe(
     ofType(CreateRecipe.type),
-    exhaustMap((action) => {
+    exhaustMap(action => {
       return request({
-        method: "POST",
-        url: "post/create",
-        param: action.payload,
+        method: 'POST',
+        url: 'post/create',
+        param: action.payload
       }).pipe(
-        map((result) => {
+        map(result => {
           if (result.status === 200) {
-            return CreateRecipeSuccess.get(result.data);
+            return CreateRecipeSuccess.get(result.data)
           }
-          return CreateRecipeFailed.get(result);
+          return CreateRecipeFailed.get(result)
         }),
-        catchError((error) => {
-          return CreateRecipeFailed.get(error);
+        catchError(error => {
+          return CreateRecipeFailed.get(error)
         })
-      );
+      )
     })
-  );
+  )
 
-const updateRecipeEpic$ = (action$) =>
+const deleteRecipeEpic$ = action$ =>
+  action$.pipe(
+    ofType(DeleteRecipe.type),
+    exhaustMap(action => {
+      return request({
+        method: 'POST',
+        url: 'post/remove',
+        param: action.payload
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            history.replace('/')
+            return DeleteRecipeSuccess.get(result.data)
+          }
+          GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            'Thông báo',
+            result.data.err
+          )
+          return DeleteRecipeFailed.get(result)
+        }),
+        catchError(error => {
+          GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            'Thông báo',
+            'Đã có lỗi xả ra khi xóa bài đăng'
+          )
+          return DeleteRecipeFailed.get(error)
+        })
+      )
+    })
+  )
+
+const commentRecipeEpic$ = action$ =>
+  action$.pipe(
+    ofType(CommentPost.type),
+    exhaustMap(action => {
+      return request({
+        method: 'POST',
+        url: 'user/comment',
+        param: action.payload
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            store.dispatch(
+              GetDetailRecipe.get({ postId: action.payload.postId })
+            )
+            return CommentPostSuccess.get(result.data)
+          }
+          GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            'Thông báo',
+            result.data.err
+          )
+          return CommentPostFailed.get(result)
+        }),
+        catchError(error => {
+          return CommentPostFailed.get(error)
+        })
+      )
+    })
+  )
+
+const deleteCommentEpic$ = action$ =>
+  action$.pipe(
+    ofType(DeleteComment.type),
+    exhaustMap(action => {
+      return request({
+        method: 'POST',
+        url: 'user/deletecomment',
+        param: action.payload.data
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            store.dispatch(
+              GetDetailRecipe.get({ postId: action.payload.postId })
+            )
+            return DeleteCommentSuccess.get(result.data)
+          }
+          GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            'Thông báo',
+            result.data.err
+          )
+          return DeleteCommentFailed.get(result)
+        }),
+        catchError(error => {
+          return DeleteCommentFailed.get(error)
+        })
+      )
+    })
+  )
+
+const updateRecipeEpic$ = action$ =>
   action$.pipe(
     ofType(UpdateRecipe.type),
-    exhaustMap((action) => {
+    exhaustMap(action => {
       return request({
-        method: "PUT",
+        method: 'PUT',
         url: `post/update/${action.payload.id}`,
-        param: action.payload,
+        param: action.payload.data
       }).pipe(
-        map((result) => {
+        map(result => {
           if (result.status === 200) {
-            store.dispatch(GetDetailRecipe.get({ postId: action.payload.id }));
-            return UpdateRecipeSuccess.get(result.data);
+            store.dispatch(GetDetailRecipe.get({ postId: action.payload.id }))
+            return UpdateRecipeSuccess.get(result.data)
           }
-          return UpdateRecipeFailed.get(result);
+          return UpdateRecipeFailed.get(result)
         }),
-        catchError((error) => {
-          return UpdateRecipeFailed.get(error);
+        catchError(error => {
+          return UpdateRecipeFailed.get(error)
         })
-      );
+      )
     })
-  );
+  )
 
-const getDetailRecipeEpic$ = (action$) =>
+const getDetailRecipeEpic$ = action$ =>
   action$.pipe(
     ofType(GetDetailRecipe.type),
-    exhaustMap((action) => {
+    exhaustMap(action => {
       return request({
-        method: "GET",
-        url: `post/getPost/${action.payload.postId}`,
+        method: 'GET',
+        url: `post/getPost/${action.payload.postId}`
       }).pipe(
-        map((result) => {
+        map(result => {
           if (result.status === 200) {
-            return GetDetailRecipeSuccess.get(result.data);
+            return GetDetailRecipeSuccess.get(result.data)
           }
-          return GetDetailRecipeFailed.get(result);
+          GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            'Thông báo',
+            result.data.err,
+            MODAL_TYPE.NORMAL,
+            () => history.replace('/')
+          )
+          return GetDetailRecipeFailed.get(result)
         }),
-        catchError((error) => {
-          return GetDetailRecipeFailed.get(error);
+        catchError(error => {
+          GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            'Thông báo',
+            'Đã có lỗi xảy ra hoặc công thức không tồn tại. Quay về trang chủ?',
+            MODAL_TYPE.NORMAL,
+            () => history.replace('/')
+          )
+          return GetDetailRecipeFailed.get(error)
         })
-      );
+      )
     })
-  );
+  )
 
-const searchRecipesEpic$ = (action$) =>
+const searchRecipesEpic$ = action$ =>
   action$.pipe(
     ofType(SearchRecipes.type),
-    exhaustMap((action) => {
+    exhaustMap(action => {
       return request({
-        method: "GET",
-        url: "post/search",
-        param: action.payload,
+        method: 'GET',
+        url: 'post/search',
+        param: action.payload
       }).pipe(
-        map((result) => {
+        map(result => {
           if (result.status === 200) {
-            return SearchRecipesSuccess.get(result.data);
+            return SearchRecipesSuccess.get(result.data)
           }
-          return SearchRecipesFailed.get(result);
+          return SearchRecipesFailed.get(result)
         }),
-        catchError((error) => {
-          return SearchRecipesFailed.get(error);
+        catchError(error => {
+          return SearchRecipesFailed.get(error)
         })
-      );
+      )
     })
-  );
+  )
 
-const likePostEpic$ = (action$) =>
+const likePostEpic$ = action$ =>
   action$.pipe(
     ofType(LikePost.type),
-    exhaustMap((action) => {
+    exhaustMap(action => {
       return request({
-        method: "POST",
-        url: "user/likepost",
-        param: action.payload,
+        method: 'POST',
+        url: 'user/likepost',
+        param: action.payload
       }).pipe(
-        map((result) => {
+        map(result => {
           if (result.status === 200) {
             store.dispatch(
               GetDetailRecipe.get({ postId: action.payload.postId })
-            );
-            return LikePostSuccess.get(result.data);
+            )
+            return LikePostSuccess.get(result.data)
           }
-          return LikePostFailed.get(result);
+          return LikePostFailed.get(result)
         }),
-        catchError((error) => {
-          return LikePostFailed.get(error);
+        catchError(error => {
+          return LikePostFailed.get(error)
         })
-      );
+      )
     })
-  );
+  )
 
-const unlikePostEpic$ = (action$) =>
+const unlikePostEpic$ = action$ =>
   action$.pipe(
     ofType(UnlikePost.type),
-    exhaustMap((action) => {
+    exhaustMap(action => {
       return request({
-        method: "POST",
-        url: "user/unlikepost",
-        param: action.payload,
+        method: 'POST',
+        url: 'user/unlikepost',
+        param: action.payload
       }).pipe(
-        map((result) => {
+        map(result => {
           if (result.status === 200) {
             store.dispatch(
               GetDetailRecipe.get({ postId: action.payload.postId })
-            );
-            return UnlikePostSuccess.get(result.data);
+            )
+            return UnlikePostSuccess.get(result.data)
           }
-          return UnlikePostFailed.get(result);
+          return UnlikePostFailed.get(result)
         }),
-        catchError((error) => {
-          return UnlikePostFailed.get(error);
+        catchError(error => {
+          return UnlikePostFailed.get(error)
         })
-      );
+      )
     })
-  );
+  )
 
 export const recipeEpics = combineEpics(
   createRecipeEpic$,
@@ -167,5 +279,8 @@ export const recipeEpics = combineEpics(
   likePostEpic$,
   unlikePostEpic$,
   updateRecipeEpic$,
-  searchRecipesEpic$
-);
+  searchRecipesEpic$,
+  deleteRecipeEpic$,
+  commentRecipeEpic$,
+  deleteCommentEpic$
+)
