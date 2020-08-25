@@ -7,71 +7,77 @@ import {
   IconButton,
   Tab,
   Tabs,
-  Typography,
-} from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
-import ListRecipes from "pages/Recipes/components/ListRecipes";
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { LIMIT_ITEMS } from "ultis/functions";
-import AppHeader from "../../components/Header/AppHeader";
-import AvatarDialog from "./components/avatarDialog";
-import FollowDialog, { FLDIALOG_TYPES } from "./components/followDialog";
-import UpdateInfoDialog from "./components/updateInformation";
-import { profileStyles, TAB_TYPES } from "./constants";
-import { GetProfile, GetProfilePost, SetProfileTab } from "./redux/actions";
+  Typography
+} from '@material-ui/core'
+import { Pagination } from '@material-ui/lab'
+import ListRecipes from 'pages/Recipes/components/ListRecipes'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { LIMIT_ITEMS } from 'ultis/functions'
+import AppHeader from '../../components/Header/AppHeader'
+import AvatarDialog from './components/avatarDialog'
+import FollowDialog, { FLDIALOG_TYPES } from './components/followDialog'
+import UpdateInfoDialog from './components/updateInformation'
+import { profileStyles, TAB_TYPES } from './constants'
+import { GetProfile, GetProfilePost, SetProfileTab } from './redux/actions'
+import { useHistory } from 'react-router-dom'
 
-const tabs = ["Bài đăng", "Yêu thích", "Đang theo dõi"];
+const tabs = ['Bài đăng', 'Yêu thích', 'Đang theo dõi']
 
-export default (props) => {
-  const classes = profileStyles();
-  const user = useSelector((state) => state.Auth.user);
-  const profile = useSelector((state) => state.Profile);
-  const dispatch = useDispatch();
-  const inputRef = useRef();
-  const [src, setSrc] = useState(null);
-  const [flDialog, setFlDialog] = useState(null);
-  const [infoDialog, setInfoDialog] = useState(false);
+export default props => {
+  const classes = profileStyles()
+  const user = useSelector(state => state.Auth.user)
+  const profile = useSelector(state => state.Profile)
+  const dispatch = useDispatch()
+  const inputRef = useRef()
+  const history = useHistory()
+  const [src, setSrc] = useState(null)
+  const [flDialog, setFlDialog] = useState(null)
+  const [infoDialog, setInfoDialog] = useState(false)
 
   useEffect(() => {
-    dispatch(GetProfile.get(user));
-  }, []);
+    if (user) {
+      dispatch(GetProfile.get(user))
+    } else {
+      history.replace('/')
+    }
+  }, [])
 
-  const readSrc = (picture) => {
-    let reader = new FileReader();
-    reader.readAsDataURL(picture);
+  const readSrc = picture => {
+    let reader = new FileReader()
+    reader.readAsDataURL(picture)
     reader.onloadend = () => {
-      setSrc(reader.result);
-    };
-  };
+      setSrc(reader.result)
+    }
+  }
 
-  const onTabChange = (index) => {
-    dispatch(SetProfileTab.get({ tab: index, page: 1 }));
+  const onTabChange = index => {
+    dispatch(SetProfileTab.get({ tab: index, page: 1 }))
     dispatch(
       GetProfilePost.get({
         userId: user.id,
         limit: LIMIT_ITEMS,
         page: 1,
-        type: TAB_TYPES[index],
+        type: TAB_TYPES[index]
       })
-    );
-  };
+    )
+  }
 
-  const onPageChange = (index) => {
-    dispatch(SetProfileTab.get({ tab, page: index }));
+  const onPageChange = index => {
+    dispatch(SetProfileTab.get({ tab, page: index }))
     dispatch(
       GetProfilePost.get({
         userId: user.id,
         limit: LIMIT_ITEMS,
         page: index,
-        type: TAB_TYPES[tab],
+        type: TAB_TYPES[tab]
       })
-    );
-  };
+    )
+  }
 
   const onCloseDialog = () => {
-    setSrc(null);
-  };
+    setSrc(null)
+  }
 
   const renderEmpty = () => {
     switch (profile.tab) {
@@ -80,27 +86,27 @@ export default (props) => {
           <Typography variant="body1" className={classes.emptyText}>
             Bạn chưa đăng công thức nấu ăn nào.
           </Typography>
-        );
+        )
       case 1:
         return (
           <Typography variant="body1" className={classes.emptyText}>
             Bạn chưa thích công thức nấu ăn nào.
           </Typography>
-        );
+        )
       case 2:
         return (
           <Typography variant="body1" className={classes.emptyText}>
             Bạn chưa theo dõi người nào.
           </Typography>
-        );
+        )
       default:
         return (
           <Typography variant="body1" className={classes.emptyText}>
             Bạn chưa đăng công thức nấu ăn nào.
           </Typography>
-        );
+        )
     }
-  };
+  }
 
   const {
     userDetail,
@@ -108,19 +114,19 @@ export default (props) => {
     totalItems,
     isLoadingRecipe,
     page,
-    tab,
-  } = profile;
-  const totalPages = Math.ceil(totalItems / LIMIT_ITEMS);
+    tab
+  } = profile
+  const totalPages = Math.ceil(totalItems / LIMIT_ITEMS)
 
   if (!userDetail) {
     return (
       <>
         <AppHeader />
-        <Container maxWidth="lg" style={{ textAlign: "center" }}>
+        <Container maxWidth="lg" style={{ textAlign: 'center' }}>
           <CircularProgress style={{ marginTop: 64 }} />
         </Container>
       </>
-    );
+    )
   }
 
   return (
@@ -130,10 +136,10 @@ export default (props) => {
         <div className={classes.left}>
           <input
             accept="image/*"
-            style={{ display: "none" }}
+            style={{ display: 'none' }}
             ref={inputRef}
             type="file"
-            onChange={(e) => readSrc(e.target.files[0])}
+            onChange={e => readSrc(e.target.files[0])}
           />
           <IconButton
             edge="end"
@@ -199,7 +205,7 @@ export default (props) => {
             onChange={(event, value) => onTabChange(value)}
             aria-label="tab recipre"
           >
-            {tabs.map((item) => (
+            {tabs.map(item => (
               <Tab label={item} />
             ))}
           </Tabs>
@@ -212,7 +218,7 @@ export default (props) => {
                 count={totalPages}
                 color="primary"
                 page={page}
-                style={{ alignSelf: "flex-end" }}
+                style={{ alignSelf: 'flex-end' }}
                 onChange={(event, value) => onPageChange(value)}
               />
             </>
@@ -233,8 +239,8 @@ export default (props) => {
         onClose={() => setFlDialog(null)}
         title={
           flDialog === FLDIALOG_TYPES.FOLLOWING
-            ? "Đang theo dõi"
-            : "Theo dõi bạn"
+            ? 'Đang theo dõi'
+            : 'Theo dõi bạn'
         }
       />
       <UpdateInfoDialog
@@ -242,5 +248,5 @@ export default (props) => {
         onClose={() => setInfoDialog(false)}
       />
     </>
-  );
-};
+  )
+}

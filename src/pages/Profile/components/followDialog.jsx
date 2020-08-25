@@ -10,62 +10,65 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Paper,
-  Typography,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
-import { FiX } from "react-icons/fi";
-import "react-image-crop/dist/ReactCrop.css";
-import { useDispatch, useSelector } from "react-redux";
-import { Unfollow } from "../redux/actions";
+  Typography
+} from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import React from 'react'
+import { FiX } from 'react-icons/fi'
+import 'react-image-crop/dist/ReactCrop.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { Unfollow } from '../redux/actions'
 
 export const FLDIALOG_TYPES = {
-  FOLLOWER: "FOLLOWER",
-  FOLLOWING: "FOLLOWING",
-};
+  FOLLOWER: 'FOLLOWER',
+  FOLLOWING: 'FOLLOWING'
+}
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    textAlign: "center",
-    width: "40%",
-    minWidth: 500,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    textAlign: 'center',
+    minWidth: 400
   },
   btnStyle: {
-    borderRadius: 25,
+    borderRadius: 25
   },
   avatar: {
     width: 48,
-    height: 48,
+    height: 48
   },
   list: {
     paddingLeft: 32,
-    paddingRight: 32,
+    paddingRight: 32
   },
   titleContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    height: 64,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 64
   },
-}));
+  listItem: {
+    paddingTop: 16,
+    minWidth: 400
+  }
+}))
 
 function FollowDialog(props) {
-  const classes = useStyles();
-  const user = useSelector((state) => state.Auth.user);
-  const dispatch = useDispatch();
+  const classes = useStyles()
+  const user = useSelector(state => state.Auth.user)
+  const dispatch = useDispatch()
 
-  const { onClose, value, open, type, title } = props;
+  const { onClose, value, open, type, title } = props
 
   const handleClose = () => {
-    onClose();
-  };
+    onClose()
+  }
 
-  const unfollow = (flId) => {
-    dispatch(Unfollow.get({ userId: user.id, followerId: flId }));
-  };
+  const unfollow = flId => {
+    dispatch(Unfollow.get({ userId: user.id, followerId: flId }))
+  }
 
   return (
     <Dialog
@@ -86,8 +89,8 @@ function FollowDialog(props) {
         <Divider />
         {value && value.length > 0 ? (
           <List className={classes.list}>
-            {value.map((fl) => (
-              <ListItem divider style={{ padding: 16 }} key={fl.id}>
+            {value.map(fl => (
+              <ListItem divider className={classes.listItem} key={fl.id}>
                 <ListItemAvatar>
                   <Avatar
                     src={fl.user?.avatar ? fl.user?.avatar : null}
@@ -117,7 +120,7 @@ function FollowDialog(props) {
         )}
       </Paper>
     </Dialog>
-  );
+  )
 }
 
 FollowDialog.defaultProps = {
@@ -125,7 +128,7 @@ FollowDialog.defaultProps = {
   onClose: () => {},
   open: false,
   type: FLDIALOG_TYPES.FOLLOWING,
-  title: "",
-};
+  title: ''
+}
 
-export default FollowDialog;
+export default FollowDialog
