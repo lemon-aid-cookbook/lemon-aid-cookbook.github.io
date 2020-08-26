@@ -1,11 +1,12 @@
-import { SignOut } from "pages/SignIn/redux/actions";
+import { SignOut } from 'pages/SignIn/redux/actions'
 import {
-  GetProfilePostSuccess,
-  GetProfileSuccess,
-  SetProfileTab,
+  GetAnotherProfileSuccess,
   GetProfilePost,
   GetProfilePostFailed,
-} from "./actions";
+  GetProfilePostSuccess,
+  GetProfileSuccess,
+  SetProfileTab
+} from './actions'
 
 const initialState = {
   tabPosts: [],
@@ -14,7 +15,9 @@ const initialState = {
   page: 1,
   userDetail: null,
   isLoadingRecipe: false,
-};
+  userFollowings: [],
+  profileDetail: null
+}
 
 export function profileReducer(state = initialState, action) {
   switch (action.type) {
@@ -22,40 +25,48 @@ export function profileReducer(state = initialState, action) {
       return {
         ...state,
         userDetail: action.payload.userData,
-      };
+        userFollowings: action.payload.userData.followings
+      }
+    case GetAnotherProfileSuccess.type:
+      return {
+        ...state,
+        profileDetail: action.payload.userData
+      }
     case GetProfilePost.type:
       return {
         ...state,
-        isLoadingRecipe: true,
-      };
+        isLoadingRecipe: true
+      }
     case GetProfilePostSuccess.type:
       return {
         ...state,
         tabPosts: action.payload.posts,
         totalItems: action.payload.totalItems,
-        isLoadingRecipe: false,
-      };
+        isLoadingRecipe: false
+      }
     case GetProfilePostFailed.type:
       return {
         ...state,
-        isLoadingRecipe: false,
-      };
+        isLoadingRecipe: false
+      }
     case SignOut.type:
       return {
+        ...state,
         tabPosts: [],
         userDetail: null,
         totalItems: 0,
         tab: 0,
         page: 1,
         isLoadingRecipe: false,
-      };
+        userFollowings: []
+      }
     case SetProfileTab.type:
       return {
         ...state,
         tab: action.payload.tab,
-        page: action.payload.page,
-      };
+        page: action.payload.page
+      }
     default:
-      return state;
+      return state
   }
 }

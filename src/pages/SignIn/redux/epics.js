@@ -47,7 +47,7 @@ const signinEpic$ = action$ =>
 const signinSuccessEpic$ = action$ =>
   action$.pipe(
     ofType(SignInRequestSuccess.type),
-    map(action => GetProfile.get(action.payload.user))
+    map(action => GetProfile.get(action.payload.user.username))
   )
 
 const signupEpic$ = action$ =>

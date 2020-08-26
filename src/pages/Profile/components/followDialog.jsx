@@ -17,6 +17,7 @@ import React from 'react'
 import { FiX } from 'react-icons/fi'
 import 'react-image-crop/dist/ReactCrop.css'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { Unfollow } from '../redux/actions'
 
 export const FLDIALOG_TYPES = {
@@ -59,6 +60,7 @@ function FollowDialog(props) {
   const classes = useStyles()
   const user = useSelector(state => state.Auth.user)
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const { onClose, value, open, type, title } = props
 
@@ -90,7 +92,16 @@ function FollowDialog(props) {
         {value && value.length > 0 ? (
           <List className={classes.list}>
             {value.map(fl => (
-              <ListItem divider className={classes.listItem} key={fl.id}>
+              <ListItem
+                divider
+                button
+                onClick={() => {
+                  history.push(`/profile/${fl.user?.username}`)
+                  handleClose()
+                }}
+                className={classes.listItem}
+                key={fl.id}
+              >
                 <ListItemAvatar>
                   <Avatar
                     src={fl.user?.avatar ? fl.user?.avatar : null}

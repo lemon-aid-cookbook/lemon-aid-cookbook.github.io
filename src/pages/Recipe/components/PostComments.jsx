@@ -1,8 +1,8 @@
-import React from 'react'
+import { Button, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography, Button } from '@material-ui/core'
 import CommentSend from 'components/Comment/CommentSend'
 import CommentView from 'components/Comment/CommentView'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 const useStyles = makeStyles(theme => ({
@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
 export default props => {
   const { comments, postId } = props
   const user = useSelector(state => state.Auth.user)
+  const [isShowAll, setIsShowAll] = useState(false)
 
   const classes = useStyles()
 
@@ -24,19 +25,32 @@ export default props => {
         Thảo luận
       </Typography>
       {user && <CommentSend owner={user} postId={postId} />}
-      {comments &&
-        comments.length > 0 &&
-        comments.map(item => (
-          <CommentView
-            key={item.id}
-            postId={postId}
-            comment={item}
-            canReply={true}
-          />
-        ))}
-      {comments && comments.length > 10 && (
-        <Button size="small" color="primary" onClick={() => {}}>
-          Xem tất cả thảo luận
+      {comments && comments.length > 0 && isShowAll
+        ? comments.map(item => (
+            <CommentView
+              key={item.id}
+              postId={postId}
+              comment={item}
+              canReply={true}
+            />
+          ))
+        : comments
+            .slice(0, 5)
+            .map(item => (
+              <CommentView
+                key={item.id}
+                postId={postId}
+                comment={item}
+                canReply={true}
+              />
+            ))}
+      {comments && comments.length > 5 && (
+        <Button
+          size="small"
+          color="primary"
+          onClick={() => setIsShowAll(!isShowAll)}
+        >
+          {isShowAll ? 'Thu gọn thảo luận' : 'Xem tất cả thảo luận'}
         </Button>
       )}
     </div>

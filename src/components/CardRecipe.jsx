@@ -5,40 +5,40 @@ import {
   CardHeader,
   CardMedia,
   Grid,
-  Typography,
-} from "@material-ui/core/";
-import { makeStyles } from "@material-ui/core/styles";
-import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
-import React from "react";
-import { IoIosHeart } from "react-icons/io";
-import { Link } from "react-router-dom";
-import { COLOR } from "ultis/functions";
+  Typography
+} from '@material-ui/core/'
+import { makeStyles } from '@material-ui/core/styles'
+import QueryBuilderIcon from '@material-ui/icons/QueryBuilder'
+import React from 'react'
+import { IoIosHeart } from 'react-icons/io'
+import { Link } from 'react-router-dom'
+import { COLOR } from 'ultis/functions'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    maxWidth: 345,
+    maxWidth: 345
   },
   link: {
-    textDecoration: "none",
-    color: "#000000",
+    textDecoration: 'none',
+    color: '#000000'
   },
   media: {
     height: 0,
-    paddingTop: "56.25%",
+    paddingTop: '56.25%'
   },
   content: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-    paddingTop: theme.spacing(1),
-  },
-}));
+    paddingTop: theme.spacing(1)
+  }
+}))
 
-export default (props) => {
-  const classes = useStyles();
+export default props => {
+  const classes = useStyles()
 
   return (
     <Card className={classes.root} key={props.to}>
-      <Link to={`recipe/${props.to}`} className={classes.link}>
+      <Link to={`/recipe/${props.to}`} className={classes.link}>
         <CardMedia
           className={classes.media}
           image={props.image}
@@ -51,7 +51,7 @@ export default (props) => {
                 {props.time} phút
               </Button>
             </Grid>
-            <Grid item xs={6} style={{ textAlign: "right" }}>
+            <Grid item xs={6} style={{ textAlign: 'right' }}>
               <Button
                 startIcon={<IoIosHeart size={20} color={COLOR.primary} />}
                 size="small"
@@ -70,5 +70,5 @@ export default (props) => {
         />
       </Link>
     </Card>
-  );
-};
+  )
+}
