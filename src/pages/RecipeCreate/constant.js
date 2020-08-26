@@ -11,13 +11,13 @@ export const CATEGORY_ITEMS = [
   'Món Việt',
   'Món Trung',
   'Món Hàn',
-  'Món Nhật',
   'Món Thái',
-  'Món Ý',
-  'Món Pháp',
+  'Món Âu',
   'Đồ uống',
   'Tráng miệng'
 ]
+
+export const MAX_COOKING_TIME = 360
 
 export const recipeStyles = makeStyles(theme => ({
   root: {
@@ -86,12 +86,13 @@ export const validationRecipeSchema = yup.object().shape({
   cookingTime: yup
     .number()
     .required('* Vui lòng nhập thời gian thực hiện')
-    .min(1, 'Thời gian thực hiện nhiều hơn 0 phút'),
+    .min(1, 'Thời gian thực hiện nhiều hơn 0 phút')
+    .max(MAX_COOKING_TIME, `Thời gian thực hiện không quá ${MAX_COOKING_TIME} phút`),
   difficultLevel: yup.number().required('* Vui lòng chọn độ khó'),
   ingredients: yup
     .array()
     .required('* Vui lòng thêm ít nhất 1 nguyên liệu')
-    .of(yup.string().required('* Vui lòng nhập nguyên liệu')),
+    .of(yup.string().trim().required('* Vui lòng nhập nguyên liệu')),
   steps: yup
     .array()
     .required('* Vui lòng thêm ít nhất 1 bước thực hiện')

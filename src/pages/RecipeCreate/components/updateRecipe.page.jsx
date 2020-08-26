@@ -102,7 +102,12 @@ export default function UpdateRecipePage(props) {
             variant="contained"
             color="primary"
             className={classes.button}
-            onClick={() => history.push('/signin')}
+            onClick={() =>
+              history.push({
+                pathname: '/signin',
+                state: { from: `/edit/${id}` }
+              })
+            }
           >
             Đăng nhập
           </Button>
@@ -259,7 +264,7 @@ export default function UpdateRecipePage(props) {
                     <Chip
                       key={`chip${index}`}
                       label={item}
-                      color={isIn > -1 ? 'primary' : ''}
+                      color={isIn > -1 ? 'primary' : 'default'}
                       className={classes.chip}
                       onClick={() =>
                         onChangeCategories(

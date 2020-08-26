@@ -16,6 +16,7 @@ export default () => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const user = useSelector(state => state.Auth.user)
+  const userDetail = useSelector(state => state.Profile.userDetail)
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -51,7 +52,11 @@ export default () => {
         onClick={handleProfileMenuOpen}
         color="inherit"
       >
-        <Avatar src={user && user.avatar ? user.avatar : null} />
+        <Avatar
+          src={
+            userDetail && userDetail.avatar ? userDetail.avatar : user.avatar
+          }
+        />
       </IconButton>
       <Menu
         anchorEl={anchorEl}

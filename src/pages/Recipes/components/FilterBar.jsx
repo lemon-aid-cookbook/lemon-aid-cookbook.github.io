@@ -1,82 +1,72 @@
-import React, { useState } from 'react'
-import clsx from 'clsx'
-import { makeStyles } from '@material-ui/core/styles'
 import {
+  Button,
   Card,
   CardContent,
-  Button,
+  Checkbox,
   Collapse,
   FormControl,
-  FormGroup,
   FormControlLabel,
-  Checkbox
+  FormGroup,
+  Slider
 } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    marginTop: theme.spacing(2)
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest
-    })
-  },
-  expandOpen: {
-    transform: 'rotate(0deg)'
-  },
-  filterMenu: {
-    marginRight: theme.spacing(2)
-  },
-  filterItems: {
-    marginTop: theme.spacing(2)
-  }
-}))
+import clsx from 'clsx'
+import { MAX_COOKING_TIME } from 'pages/RecipeCreate/constant'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { CATEGORIES, filterStyles, LEVEL_ITEMS, MARK_RANGE } from '../constant'
 
 export default () => {
-  const classes = useStyles()
+  const classes = filterStyles()
+  const dispatch = useDispatch()
   const [expanded, setExpanded] = useState({
     isExpanded: false,
     type: null
   })
-  const [times, setTimes] = useState({
-    mins60: false,
-    mins120: false
-  })
-  const [level, setLevel] = useState({
-    easy: false,
-    medium: false,
-    hard: false
-  })
-  const [food, setFood] = useState({
-    food1: false,
-    food2: false
-  })
+  const [timeRange, setTimeRange] = useState([1, MAX_COOKING_TIME])
+  const [level, setLevel] = useState(LEVEL_ITEMS)
+  const [food, setFood] = useState(CATEGORIES)
 
-  const handleTimeChange = e =>
-    setTimes({ ...times, [e.target.name]: e.target.checked })
+  const filterResult = () => {
+    const params = new URLSearchParams()
+    params.append('mintime', timeRange[0])
+    params.append('maxtime', timeRange[1])
+    level.forEach(item => {
+      if (item.status) {
+        params.append('level', item.code)
+      }
+    })
+    food.forEach(item => {
+      if (item.status) {
+        params.append('category', item.code)
+      }
+    })
+    console.log(params.toString())
+  }
 
-  const handleLevelChange = e =>
-    setLevel({ ...level, [e.target.name]: e.target.checked })
+  const handleLevelChange = e => {
+    const nextLevel = [...level]
+    nextLevel[Number(e.target.name)].status = e.target.checked
+    setLevel(nextLevel)
+  }
 
-  const handleFoodChange = e =>
-    setFood({ ...food, [e.target.name]: e.target.checked })
+  const handleFoodChange = e => {
+    const nextfood = [...food]
+    nextfood[Number(e.target.name)].status = e.target.checked
+    setFood(nextfood)
+  }
 
   const handleExpanded = type => {
-    if (!expanded.isExpanded) {
-      return setExpanded({ isExpanded: true, type })
-    }
-
     if (type === expanded.type) {
-      setExpanded({ isExpanded: false, type })
+      setExpanded({ isExpanded: !expanded.isExpanded, type })
+    } else {
+      setExpanded({ isExpanded: true, type })
     }
   }
 
-  const { mins60, mins120 } = times
-  const { easy, medium, hard } = level
-  const { food1, food2 } = food
+  const valuetext = value => {
+    return `${value} phút`
+  }
 
   return (
     <Card className={classes.root}>
@@ -120,91 +110,53 @@ export default () => {
             Ẩm thực
           </Button>
         </span>
-        <Collapse
-          in={expanded.isExpanded}
-          timeout="auto"
-          unmountOnExit
-          className={classes.filterItems}
-        >
+        <Collapse in={expanded.isExpanded} timeout="auto" unmountOnExit>
           <FormControl component="fieldset">
             {expanded.type === 'times' ? (
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={mins60}
-                      onChange={handleTimeChange}
-                      name="mins60"
-                    />
-                  }
-                  label="60 phút"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={mins120}
-                      onChange={handleTimeChange}
-                      name="mins120"
-                    />
-                  }
-                  label="120 phút"
-                />
-              </FormGroup>
+              <Slider
+                value={timeRange}
+                min={1}
+                max={MAX_COOKING_TIME}
+                onChange={(event, value) => setTimeRange(value)}
+                valueLabelDisplay="auto"
+                aria-labelledby="range-slider"
+                getAriaValueText={valuetext}
+                className={classes.range}
+                marks={MARK_RANGE}
+              />
             ) : expanded.type === 'level' ? (
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={easy}
-                      onChange={handleLevelChange}
-                      name="easy"
-                    />
-                  }
-                  label="Dễ"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={medium}
-                      onChange={handleLevelChange}
-                      name="medium"
-                    />
-                  }
-                  label="Trung bình"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={hard}
-                      onChange={handleLevelChange}
-                      name="hard"
-                    />
-                  }
-                  label="Khó"
-                />
+              <FormGroup row>
+                {level.map((item, index) => (
+                  <FormControlLabel
+                    key={item.code}
+                    control={
+                      <Checkbox
+                        checked={item.status}
+                        color="primary"
+                        onChange={handleLevelChange}
+                        name={index.toString()}
+                      />
+                    }
+                    label={item.title}
+                  />
+                ))}
               </FormGroup>
             ) : (
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={food1}
-                      onChange={handleFoodChange}
-                      name="food1"
-                    />
-                  }
-                  label="Food 1"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={food2}
-                      onChange={handleFoodChange}
-                      name="food2"
-                    />
-                  }
-                  label="Food 2"
-                />
+              <FormGroup row>
+                {food.map((item, index) => (
+                  <FormControlLabel
+                    key={item.code}
+                    control={
+                      <Checkbox
+                        checked={item.status}
+                        color="primary"
+                        onChange={handleFoodChange}
+                        name={index.toString()}
+                      />
+                    }
+                    label={item.title}
+                  />
+                ))}
               </FormGroup>
             )}
           </FormControl>

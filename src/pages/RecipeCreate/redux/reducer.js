@@ -2,7 +2,8 @@ import { GetDetailRecipeSuccess, DeleteRecipeSuccess } from './actions'
 
 const initialState = {
   detailRecipe: null,
-  searchResult: []
+  searchResult: [],
+  totalItems: 0,
 }
 
 export function recipeReducer(state = initialState, action) {
