@@ -57,7 +57,11 @@ export default function CommentView(props) {
         'Xác nhận',
         'Bạn chưa đăng nhập. Vui lòng đăng nhập để trả lời thảo luận.',
         MODAL_TYPE.CHOICE,
-        () => history.push('/signin')
+        () =>
+          history.push({
+            pathname: '/signin',
+            state: { from: `/recipe/${postId}` }
+          })
       )
     }
   }

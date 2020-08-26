@@ -103,6 +103,7 @@ export default function MyProfile(props) {
     tabPosts,
     totalItems,
     isLoadingRecipe,
+    isLoadingAvatar,
     page,
     tab
   } = profile
@@ -131,20 +132,24 @@ export default function MyProfile(props) {
             type="file"
             onChange={e => readSrc(e.target.files[0])}
           />
-          <IconButton
-            edge="end"
-            onClick={() => inputRef.current.click()}
-            color="inherit"
-          >
-            <Avatar
-              className={classes.large}
-              src={
-                profileDetail && profileDetail.avatar
-                  ? profileDetail.avatar
-                  : null
-              }
-            />
-          </IconButton>
+          {isLoadingAvatar ? (
+            <CircularProgress className={classes.loading} />
+          ) : (
+            <IconButton
+              edge="end"
+              onClick={() => inputRef.current.click()}
+              color="inherit"
+            >
+              <Avatar
+                className={classes.large}
+                src={
+                  profileDetail && profileDetail.avatar
+                    ? profileDetail.avatar
+                    : null
+                }
+              />
+            </IconButton>
+          )}
           <Typography variant="h6" className={classes.boldText}>
             {profileDetail.username}
           </Typography>

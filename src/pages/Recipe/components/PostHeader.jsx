@@ -97,7 +97,11 @@ export default props => {
         'Thông báo',
         'Bạn chưa đăng nhập. Vui lòng đăng nhập để theo dõi người dùng này.',
         MODAL_TYPE.CHOICE,
-        () => history.push('/signin')
+        () =>
+          history.push({
+            pathname: '/signin',
+            state: { from: `/recipe/${postId}` }
+          })
       )
     }
   }
@@ -114,7 +118,11 @@ export default props => {
         'Thông báo',
         'Bạn chưa đăng nhập. Vui lòng đăng nhập để thích bài đăng này.',
         MODAL_TYPE.CHOICE,
-        () => history.push('/signin')
+        () =>
+          history.push({
+            pathname: '/signin',
+            state: { from: `/recipe/${postId}` }
+          })
       )
     }
   }

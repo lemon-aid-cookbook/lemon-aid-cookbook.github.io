@@ -19,7 +19,7 @@ function App() {
       <Route path="/signin" component={SignIn} />
       <Route path="/signup" component={SignUp} />
       <Route path="/forgot" component={ForgotPassword} />
-      <Route exact path="/recipes" component={Recipes} />
+      <Route exact path="/search/:keyword" component={Recipes} />
       <Route path="/create" component={RecipeCreate} />
       <Route path="/recipe/:id" component={Recipe} />
       <Route path="/edit/:id" component={UpdateRecipePage} />

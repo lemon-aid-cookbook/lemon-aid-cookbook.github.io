@@ -68,7 +68,11 @@ export default function AnotherProfile(props) {
         'Thông báo',
         'Bạn chưa đăng nhập. Vui lòng đăng nhập để theo dõi người dùng này.',
         MODAL_TYPE.CHOICE,
-        () => history.push('/signin')
+        () =>
+          history.push({
+            pathname: '/signin',
+            state: { from: `/profile/${props.username}` }
+          })
       )
     }
   }

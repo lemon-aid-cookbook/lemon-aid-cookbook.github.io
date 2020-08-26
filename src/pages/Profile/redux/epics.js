@@ -59,14 +59,20 @@ const updateInformationEpic$ = action$ =>
       }).pipe(
         map(result => {
           if (result.status === 200) {
-            store.dispatch(
-              GetAnotherProfile.get(store.getState().Auth.user.username)
-            )
+            store.dispatch(GetProfile.get(store.getState().Auth.user.username))
             return UpdateInformationSuccess.get(result.data)
           }
+          GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            'Thông báo',
+            result.data?.error
+          )
           return UpdateInformationFailed.get(result)
         }),
         catchError(error => {
+          GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            'Thông báo',
+            null
+          )
           return UpdateInformationFailed.get(error)
         })
       )

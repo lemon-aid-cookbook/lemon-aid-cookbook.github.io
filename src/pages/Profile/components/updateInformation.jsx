@@ -40,12 +40,16 @@ const validationSchema = yup.object().shape({
   oldPass: yup
     .string()
     .required('* Vui lòng nhập mật khẩu cũ')
+    .min(8, 'Mật khẩu gồm 8 kí tự trở lên')
+    .max(48, 'Mật khẩu không vượt quá 48 kí tự')
     .matches(/(?=.{8,})/, {
       message: 'Mật khẩu phải gồm 8 kí tự'
     }),
   password: yup
     .string()
     .required('* Vui lòng nhập mật khẩu mới')
+    .min(8, 'Mật khẩu gồm 8 kí tự trở lên')
+    .max(48, 'Mật khẩu không vượt quá 48 kí tự')
     .matches(/(?=.{8,})/, {
       message: 'Mật khẩu phải gồm 8 kí tự'
     })

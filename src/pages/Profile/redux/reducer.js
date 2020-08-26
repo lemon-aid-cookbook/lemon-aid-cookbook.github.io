@@ -5,7 +5,10 @@ import {
   GetProfilePostFailed,
   GetProfilePostSuccess,
   GetProfileSuccess,
-  SetProfileTab
+  SetProfileTab,
+  UpdateInformation,
+  UpdateInformationFailed,
+  UpdateInformationSuccess
 } from './actions'
 
 const initialState = {
@@ -15,6 +18,7 @@ const initialState = {
   page: 1,
   userDetail: null,
   isLoadingRecipe: false,
+  isLoadingAvatar: false,
   userFollowings: [],
   profileDetail: null
 }
@@ -48,6 +52,21 @@ export function profileReducer(state = initialState, action) {
       return {
         ...state,
         isLoadingRecipe: false
+      }
+    case UpdateInformation.type:
+      return {
+        ...state,
+        isLoadingAvatar: true
+      }
+    case UpdateInformationFailed.type:
+      return {
+        ...state,
+        isLoadingAvatar: false
+      }
+    case UpdateInformationSuccess.type:
+      return {
+        ...state,
+        isLoadingAvatar: false
       }
     case SignOut.type:
       return {

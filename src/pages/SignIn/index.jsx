@@ -18,18 +18,33 @@ function SignIn() {
 
   useEffect(() => {
     if (user) {
-      history.replace('/')
+      if (history.location.state) {
+        history.goBack()
+      } else {
+        history.replace('/')
+      }
     }
-  }, [])
+  }, [user])
 
   const validationSchema = yup.object().shape({
     password: yup
       .string()
       .required('* Vui lòng nhập mật khẩu')
+      .min(8, 'Mật khẩu gồm 8 kí tự trở lên')
+      .max(48, 'Mật khẩu không vượt quá 48 kí tự')
       .matches(/(?=.{8,})/, {
         message: 'Mật khẩu phải gồm 8 kí tự'
       }),
-    username: yup.string().trim().required('* Vui lòng nhập tên đăng nhập')
+    username: yup
+      .string()
+      .trim()
+      .required('* Vui lòng nhập tên đăng nhập')
+      .min(3, 'Tên đăng nhập từ 3 kí tự trở lên')
+      .max(16, 'Tên đăng nhập không được quá 16 kí tự')
+      .matches(
+        /(?=[a-zA-Z0-9._]{3,16}$)(?!.*[_.]{2})[^_.].*[^_.]$/,
+        'Tên đăng nhập không hợp lệ'
+      )
   })
 
   const handleLogin = values => {

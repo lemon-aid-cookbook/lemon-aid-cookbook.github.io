@@ -16,6 +16,7 @@ import {
   SignUpRequestFailed,
   SignUpRequestSuccess
 } from './actions'
+import { history } from 'ultis/functions'
 
 const signinEpic$ = action$ =>
   action$.pipe(
@@ -28,7 +29,6 @@ const signinEpic$ = action$ =>
       }).pipe(
         map(result => {
           if (result.status === 200) {
-            store.dispatch(goBack())
             return SignInRequestSuccess.get(result.data)
           }
           GlobalModalSetup.getGlobalModalHolder().alertMessage(
@@ -61,7 +61,7 @@ const signupEpic$ = action$ =>
       }).pipe(
         map(result => {
           if (result.status === 200) {
-            store.dispatch(replace('/signin'))
+            store.dispatch(replace('/signin', { from: '/signup' }))
             GlobalModalSetup.getGlobalModalHolder().alertMessage(
               'Thông báo',
               result.data.message
