@@ -1,6 +1,7 @@
 import {
   Avatar,
   Button,
+  ButtonBase,
   CardHeader,
   IconButton,
   Menu,
@@ -77,7 +78,7 @@ export default props => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const user = useSelector(state => state.Auth.user)
-  const followings = useSelector(state => state.Profile.userDetail?.followings)
+  const followings = useSelector(state => state.Profile.userFollowings)
   const isFav = user && likes.some(like => like.postlike.id === user.id)
   const isFollow = followings && followings.some(fl => fl.user.id === owner.id)
   const [anchor, setAnchor] = useState(null)
@@ -91,6 +92,13 @@ export default props => {
       } else {
         dispatch(Follow.get({ userId: user.id, followerId: owner.id }))
       }
+    } else {
+      GlobalModalSetup.getGlobalModalHolder().alertMessage(
+        'Thông báo',
+        'Bạn chưa đăng nhập. Vui lòng đăng nhập để theo dõi người dùng này.',
+        MODAL_TYPE.CHOICE,
+        () => history.push('/signin')
+      )
     }
   }
 
@@ -101,6 +109,13 @@ export default props => {
       } else {
         dispatch(LikePost.get({ userId: user.id, postId }))
       }
+    } else {
+      GlobalModalSetup.getGlobalModalHolder().alertMessage(
+        'Thông báo',
+        'Bạn chưa đăng nhập. Vui lòng đăng nhập để thích bài đăng này.',
+        MODAL_TYPE.CHOICE,
+        () => history.push('/signin')
+      )
     }
   }
 
@@ -111,10 +126,16 @@ export default props => {
   return (
     <>
       <div className={classes.author}>
-        <CardHeader
-          avatar={<Avatar src={owner.avatar} alt={owner.username} />}
-          title={owner.username}
-        />
+        <ButtonBase
+          focusRipple
+          onClick={() => history.push(`/profile/${owner.username}`)}
+        >
+          <CardHeader
+            avatar={<Avatar src={owner.avatar} alt={owner.username} />}
+            title={owner.username}
+          />
+        </ButtonBase>
+
         <div className={classes.author}>
           {((user && user.id !== owner.id) || !user) && (
             <IconButton
