@@ -47,6 +47,11 @@ export const CATEGORIES = [
     status: false
   },
   {
+    title: 'Món Nhật',
+    code: 'japanfood',
+    status: false
+  },
+  {
     title: 'Món Thái',
     code: 'thaifood',
     status: false
@@ -90,5 +95,35 @@ export const filterStyles = makeStyles(theme => ({
     minWidth: 270,
     marginLeft: theme.spacing(2),
     marginTop: theme.spacing(3)
+  },
+  rightMenu: {
+    textAlign: 'right'
+  },
+  recipesNum: {
+    marginRight: theme.spacing(2)
+  },
+  sortMenu: {
+    height: '2rem',
+    marginLeft: theme.spacing(2)
+  },
+  namebar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: theme.spacing(2)
+  },
+  itemName: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1
+  },
+  itemNameCol: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    flex: 1
   }
 }))

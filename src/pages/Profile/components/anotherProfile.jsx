@@ -6,7 +6,6 @@ import {
   Container,
   Typography
 } from '@material-ui/core'
-import { Pagination } from '@material-ui/lab'
 import { GlobalModalSetup } from 'components/GlobalModal'
 import ListRecipes from 'pages/Recipes/components/ListRecipes'
 import React, { useState } from 'react'
@@ -22,6 +21,7 @@ import {
   Unfollow
 } from '../redux/actions'
 import FollowDialog, { FLDIALOG_TYPES } from './followDialog'
+import Pagination from 'components/Pagination'
 
 export default function AnotherProfile(props) {
   const classes = profileStyles()
@@ -158,10 +158,8 @@ export default function AnotherProfile(props) {
               <ListRecipes list={tabPosts} />
               <Pagination
                 count={totalPages}
-                color="primary"
                 page={page}
-                style={{ alignSelf: 'flex-end' }}
-                onChange={(event, value) => onPageChange(value)}
+                onChange={onPageChange}
               />
             </>
           ) : (

@@ -33,6 +33,7 @@ import {
   UpdateRecipeFailed,
   UpdateRecipeSuccess
 } from './actions'
+import { push, goBack } from 'connected-react-router'
 
 const createRecipeEpic$ = action$ =>
   action$.pipe(
@@ -45,6 +46,9 @@ const createRecipeEpic$ = action$ =>
       }).pipe(
         map(result => {
           if (result.status === 200) {
+            store.dispatch(
+              push(`/profile/${store.getState().Auth.user.username}`)
+            )
             return CreateRecipeSuccess.get(result.data)
           }
           return CreateRecipeFailed.get(result)
@@ -157,6 +161,7 @@ const updateRecipeEpic$ = action$ =>
         map(result => {
           if (result.status === 200) {
             store.dispatch(GetDetailRecipe.get({ postId: action.payload.id }))
+            store.dispatch(goBack())
             return UpdateRecipeSuccess.get(result.data)
           }
           return UpdateRecipeFailed.get(result)

@@ -11,6 +11,7 @@ export const CATEGORY_ITEMS = [
   'Món Việt',
   'Món Trung',
   'Món Hàn',
+  'Món Nhật',
   'Món Thái',
   'Món Âu',
   'Đồ uống',
@@ -87,7 +88,10 @@ export const validationRecipeSchema = yup.object().shape({
     .number()
     .required('* Vui lòng nhập thời gian thực hiện')
     .min(1, 'Thời gian thực hiện nhiều hơn 0 phút')
-    .max(MAX_COOKING_TIME, `Thời gian thực hiện không quá ${MAX_COOKING_TIME} phút`),
+    .max(
+      MAX_COOKING_TIME,
+      `Thời gian thực hiện không quá ${MAX_COOKING_TIME} phút`
+    ),
   difficultLevel: yup.number().required('* Vui lòng chọn độ khó'),
   ingredients: yup
     .array()
