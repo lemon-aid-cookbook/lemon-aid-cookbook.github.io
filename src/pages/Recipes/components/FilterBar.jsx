@@ -7,42 +7,40 @@ import {
   FormControl,
   FormControlLabel,
   FormGroup,
-  Slider
+  Grid,
+  MenuItem,
+  Select,
+  Slider,
+  Typography
 } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import clsx from 'clsx'
 import { MAX_COOKING_TIME } from 'pages/RecipeCreate/constant'
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { CATEGORIES, filterStyles, LEVEL_ITEMS, MARK_RANGE } from '../constant'
+import { useSelector } from 'react-redux'
+import { useMediaQuery } from 'react-responsive'
+import { filterStyles, MARK_RANGE } from '../constant'
 
-export default () => {
+export default props => {
   const classes = filterStyles()
-  const dispatch = useDispatch()
+  const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
+  const recipe = useSelector(state => state.Recipe)
   const [expanded, setExpanded] = useState({
     isExpanded: false,
     type: null
   })
-  const [timeRange, setTimeRange] = useState([1, MAX_COOKING_TIME])
-  const [level, setLevel] = useState(LEVEL_ITEMS)
-  const [food, setFood] = useState(CATEGORIES)
 
-  const filterResult = () => {
-    const params = new URLSearchParams()
-    params.append('mintime', timeRange[0])
-    params.append('maxtime', timeRange[1])
-    level.forEach(item => {
-      if (item.status) {
-        params.append('level', item.code)
-      }
-    })
-    food.forEach(item => {
-      if (item.status) {
-        params.append('category', item.code)
-      }
-    })
-    console.log(params.toString())
-  }
+  const {
+    timeRange,
+    setTimeRange,
+    level,
+    setLevel,
+    food,
+    setFood,
+    sort,
+    setSort,
+    filterResult
+  } = props
 
   const handleLevelChange = e => {
     const nextLevel = [...level]
@@ -69,99 +67,151 @@ export default () => {
   }
 
   return (
-    <Card className={classes.root}>
-      <CardContent>
-        <span className={classes.filterMenu}>
-          <Button
-            className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded.isExpanded
-            })}
-            onClick={() => handleExpanded('times')}
-            aria-expanded={expanded.isExpanded}
-            size="small"
-            endIcon={<ExpandMoreIcon />}
-          >
-            Thời gian
-          </Button>
-        </span>
-        <span className={classes.filterMenu}>
-          <Button
-            className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded.isExpanded
-            })}
-            onClick={() => handleExpanded('level')}
-            aria-expanded={expanded.isExpanded}
-            size="small"
-            endIcon={<ExpandMoreIcon />}
-          >
-            Độ khó
-          </Button>
-        </span>
-        <span className={classes.filterMenu}>
-          <Button
-            className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded.isExpanded
-            })}
-            onClick={() => handleExpanded('food')}
-            aria-expanded={expanded.isExpanded}
-            size="small"
-            endIcon={<ExpandMoreIcon />}
-          >
-            Ẩm thực
-          </Button>
-        </span>
-        <Collapse in={expanded.isExpanded} timeout="auto" unmountOnExit>
-          <FormControl component="fieldset">
-            {expanded.type === 'times' ? (
-              <Slider
-                value={timeRange}
-                min={1}
-                max={MAX_COOKING_TIME}
-                onChange={(event, value) => setTimeRange(value)}
-                valueLabelDisplay="auto"
-                aria-labelledby="range-slider"
-                getAriaValueText={valuetext}
-                className={classes.range}
-                marks={MARK_RANGE}
-              />
-            ) : expanded.type === 'level' ? (
-              <FormGroup row>
-                {level.map((item, index) => (
-                  <FormControlLabel
-                    key={item.code}
-                    control={
-                      <Checkbox
-                        checked={item.status}
-                        color="primary"
-                        onChange={handleLevelChange}
-                        name={index.toString()}
-                      />
-                    }
-                    label={item.title}
-                  />
-                ))}
-              </FormGroup>
-            ) : (
-              <FormGroup row>
-                {food.map((item, index) => (
-                  <FormControlLabel
-                    key={item.code}
-                    control={
-                      <Checkbox
-                        checked={item.status}
-                        color="primary"
-                        onChange={handleFoodChange}
-                        name={index.toString()}
-                      />
-                    }
-                    label={item.title}
-                  />
-                ))}
-              </FormGroup>
-            )}
+    <>
+      <Grid container className={classes.namebar}>
+        <div
+          className={isDesktopOrLaptop ? classes.itemName : classes.itemNameCol}
+        >
+          <Typography variant="h6" className={classes.recipesNum}>
+            {props.name}
+          </Typography>
+          <Typography variant="caption">
+            {recipe.totalItems ? recipe.totalItems : 0} công thức
+          </Typography>
+        </div>
+        <div
+          className={isDesktopOrLaptop ? classes.itemName : classes.itemNameCol}
+          style={{
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end'
+          }}
+        >
+          <Typography variant="subtitle1">
+            <strong>Sắp xếp theo:</strong>
+          </Typography>
+          <FormControl>
+            <Select
+              label="Sắp xếp theo"
+              variant="outlined"
+              color="primary"
+              value={sort}
+              className={classes.sortMenu}
+              onChange={e => {
+                setSort(e.target.value)
+                filterResult(e.target.value)
+              }}
+            >
+              <MenuItem value="latest">Mới nhất</MenuItem>
+              <MenuItem value="favorite">Yêu thích</MenuItem>
+            </Select>
           </FormControl>
-        </Collapse>
-      </CardContent>
-    </Card>
+        </div>
+      </Grid>
+      <Card className={classes.root}>
+        <CardContent>
+          <span className={classes.filterMenu}>
+            <Button
+              className={clsx(classes.expand, {
+                [classes.expandOpen]: expanded.isExpanded
+              })}
+              onClick={() => handleExpanded('times')}
+              aria-expanded={expanded.isExpanded}
+              size="small"
+              endIcon={<ExpandMoreIcon />}
+            >
+              Thời gian
+            </Button>
+          </span>
+          <span className={classes.filterMenu}>
+            <Button
+              className={clsx(classes.expand, {
+                [classes.expandOpen]: expanded.isExpanded
+              })}
+              onClick={() => handleExpanded('level')}
+              aria-expanded={expanded.isExpanded}
+              size="small"
+              endIcon={<ExpandMoreIcon />}
+            >
+              Độ khó
+            </Button>
+          </span>
+          <span className={classes.filterMenu}>
+            <Button
+              className={clsx(classes.expand, {
+                [classes.expandOpen]: expanded.isExpanded
+              })}
+              onClick={() => handleExpanded('food')}
+              aria-expanded={expanded.isExpanded}
+              size="small"
+              endIcon={<ExpandMoreIcon />}
+            >
+              Ẩm thực
+            </Button>
+          </span>
+          <span>
+            <Button
+              onClick={() => filterResult(sort)}
+              aria-expanded={expanded.isExpanded}
+              size="small"
+              variant="contained"
+              color="primary"
+            >
+              Áp dụng
+            </Button>
+          </span>
+          <Collapse in={expanded.isExpanded} timeout="auto" unmountOnExit>
+            <FormControl component="fieldset">
+              {expanded.type === 'times' ? (
+                <Slider
+                  value={timeRange}
+                  min={1}
+                  max={MAX_COOKING_TIME}
+                  onChange={(event, value) => setTimeRange(value)}
+                  valueLabelDisplay="auto"
+                  aria-labelledby="range-slider"
+                  getAriaValueText={valuetext}
+                  className={classes.range}
+                  marks={MARK_RANGE}
+                />
+              ) : expanded.type === 'level' ? (
+                <FormGroup row>
+                  {level.map((item, index) => (
+                    <FormControlLabel
+                      key={item.code}
+                      control={
+                        <Checkbox
+                          checked={item.status}
+                          color="primary"
+                          onChange={handleLevelChange}
+                          name={index.toString()}
+                        />
+                      }
+                      label={item.title}
+                    />
+                  ))}
+                </FormGroup>
+              ) : (
+                <FormGroup row>
+                  {food.map((item, index) => (
+                    <FormControlLabel
+                      key={item.code}
+                      control={
+                        <Checkbox
+                          checked={item.status}
+                          color="primary"
+                          onChange={handleFoodChange}
+                          name={index.toString()}
+                        />
+                      }
+                      label={item.title}
+                    />
+                  ))}
+                </FormGroup>
+              )}
+            </FormControl>
+          </Collapse>
+        </CardContent>
+      </Card>
+    </>
   )
 }

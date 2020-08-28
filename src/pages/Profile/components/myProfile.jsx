@@ -9,7 +9,7 @@ import {
   Tabs,
   Typography
 } from '@material-ui/core'
-import { Pagination } from '@material-ui/lab'
+import Pagination from 'components/Pagination'
 import ListRecipes from 'pages/Recipes/components/ListRecipes'
 import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -215,10 +215,8 @@ export default function MyProfile(props) {
               <ListRecipes list={tabPosts} />
               <Pagination
                 count={totalPages}
-                color="primary"
                 page={page}
-                style={{ alignSelf: 'flex-end' }}
-                onChange={(event, value) => onPageChange(value)}
+                onChange={onPageChange}
               />
             </>
           ) : (

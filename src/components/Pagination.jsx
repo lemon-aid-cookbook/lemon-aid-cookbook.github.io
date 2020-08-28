@@ -1,7 +1,7 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import { Pagination } from '@material-ui/lab'
+import React from 'react'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,9 +18,10 @@ export default props => {
       <Grid container direction="column" alignItems="center" justify="center">
         <Grid item>
           <Pagination
-            count={props.numPage}
-            defaultPage={props.defaultPage}
+            count={props.count}
+            page={props.page}
             color="primary"
+            onChange={(event, value) => props.onChange(value)}
           />
         </Grid>
       </Grid>

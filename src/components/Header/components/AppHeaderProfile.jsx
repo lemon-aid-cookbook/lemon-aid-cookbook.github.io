@@ -4,6 +4,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import { SignOut } from 'pages/SignIn/redux/actions'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useMediaQuery } from 'react-responsive'
 import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles({
@@ -19,6 +20,7 @@ export default () => {
   const userDetail = useSelector(state => state.Profile.userDetail)
   const dispatch = useDispatch()
   const history = useHistory()
+  const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
 
   const isMenuOpen = Boolean(anchorEl)
 
@@ -35,15 +37,16 @@ export default () => {
   return (
     <>
       <div className={classes.grow} />
-      <Button
-        size="small"
-        color="secondary"
-        startIcon={<EditIcon />}
-        onClick={() => history.push('/create')}
-        style={{ marginRight: 16 }}
-      >
-        Tạo bài đăng
-      </Button>
+      {isDesktopOrLaptop && (
+        <Button
+          size="medium"
+          color="secondary"
+          startIcon={<EditIcon />}
+          onClick={() => history.push('/create')}
+        >
+          Tạo bài đăng
+        </Button>
+      )}
       <IconButton
         edge="end"
         aria-label="account of current user"
@@ -64,6 +67,16 @@ export default () => {
         open={isMenuOpen}
         onClose={handleMenuClose}
       >
+        {!isDesktopOrLaptop && (
+          <MenuItem
+            onClick={() => {
+              history.push('/create')
+              handleMenuClose()
+            }}
+          >
+            Tạo bài đăng
+          </MenuItem>
+        )}
         <MenuItem
           onClick={() => {
             history.push(`/profile/${user.username}`)
