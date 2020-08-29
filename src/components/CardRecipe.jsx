@@ -15,9 +15,6 @@ import { Link } from 'react-router-dom'
 import { COLOR } from 'ultis/functions'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    maxWidth: 345
-  },
   link: {
     textDecoration: 'none',
     color: '#000000'
@@ -37,7 +34,7 @@ export default props => {
   const classes = useStyles()
 
   return (
-    <Card className={classes.root} key={props.to}>
+    <Card key={props.to}>
       <Link to={`/recipe/${props.to}`} className={classes.link}>
         <CardMedia
           className={classes.media}

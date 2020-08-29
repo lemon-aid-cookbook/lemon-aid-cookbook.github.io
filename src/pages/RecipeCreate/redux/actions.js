@@ -20,6 +20,30 @@ export const SearchRecipes = defineAction('SEARCH_RECIPES')
 export const SearchRecipesSuccess = defineAction('SEARCH_RECIPES_SUCCESS')
 export const SearchRecipesFailed = defineAction('SEARCH_RECIPES_FAILED')
 
+export const GetFollowingPosts = defineAction('GET_FOLLOWING_POSTS')
+export const GetFollowingPostsSuccess = defineAction(
+  'GET_FOLLOWING_POSTS_SUCCESS'
+)
+export const GetFollowingPostsFailed = defineAction(
+  'GET_FOLLOWING_POSTS_FAILED'
+)
+
+export const SearchFavoriteRecipes = defineAction('SEARCH_FAVORITES_RECIPES')
+export const SearchFavoriteRecipesSuccess = defineAction(
+  'SEARCH_FAVORITES_RECIPES_SUCCESS'
+)
+export const SearchFavoriteRecipesFailed = defineAction(
+  'SEARCH_FAVORITES_RECIPES_FAILED'
+)
+
+export const SearchLatestRecipes = defineAction('SEARCH_LATEST_RECIPES')
+export const SearchLatestRecipesSuccess = defineAction(
+  'SEARCH_LATEST_RECIPES_SUCCESS'
+)
+export const SearchLatestRecipesFailed = defineAction(
+  'SEARCH_LATEST_RECIPES_FAILED'
+)
+
 export const LikePost = defineAction('LIKE_POST')
 export const LikePostSuccess = defineAction('LIKE_POST_SUCCESS')
 export const LikePostFailed = defineAction('LIKE_POST_FAILED')

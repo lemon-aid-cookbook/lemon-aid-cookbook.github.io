@@ -30,4 +30,8 @@ export const Unfollow = defineAction('UNFOLLOW')
 export const UnfollowSuccess = defineAction('UNFOLLOW_SUCCESS')
 export const UnfollowFailed = defineAction('UNFOLLOW_FAILED')
 
+export const ChangePassword = defineAction('CHANGE_PASSWORD')
+export const ChangePasswordSuccess = defineAction('CHANGE_PASSWORD_SUCCESS')
+export const ChangePasswordFailed = defineAction('CHANGE_PASSWORD_FAILED')
+
 export const SetProfileTab = defineAction('SET_PROFILE_TAB')

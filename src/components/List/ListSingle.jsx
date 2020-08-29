@@ -1,6 +1,7 @@
-import React from 'react'
+import { Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography, Grid } from '@material-ui/core'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles({
   root: {
@@ -13,7 +14,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default props => {
+function ListSingle(props) {
   const classes = useStyles()
   let items = props.children
 
@@ -25,13 +26,21 @@ export default props => {
     <div className={classes.root}>
       <Typography variant="h5">
         <strong>{props.name}</strong>
-        <Typography variant="caption">
-          <a href={props.link} className={classes.more}>
-            Xem thêm
-          </a>
-        </Typography>
+        {props.showMore && (
+          <Typography variant="caption">
+            <Link to={props.link} className={classes.more}>
+              Xem thêm
+            </Link>
+          </Typography>
+        )}
       </Typography>
-      <Grid container spacing={3} className={classes.root}>
+      <Grid
+        container
+        spacing={3}
+        className={classes.root}
+        alignItems="center"
+        direction="row"
+      >
         {items.map(item => (
           <Grid item xs={12} sm={6} md={4} lg={3}>
             {item}
@@ -41,3 +50,9 @@ export default props => {
     </div>
   )
 }
+
+ListSingle.defaultProps = {
+  showMore: true
+}
+
+export default ListSingle

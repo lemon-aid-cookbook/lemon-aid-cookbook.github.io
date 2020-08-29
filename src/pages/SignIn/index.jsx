@@ -9,12 +9,14 @@ import * as yup from 'yup'
 import { CTextField, helperTextStyles, styles } from './constants'
 import { SignInRequest } from './redux/actions'
 import './signin.css'
+import { useMediaQuery } from 'react-responsive'
 
 function SignIn() {
   const history = useHistory()
   const dispatch = useDispatch()
   const helperTextStyle = helperTextStyles()
   const user = useSelector(state => state.Auth?.user)
+  const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
 
   useEffect(() => {
     if (user) {
@@ -159,11 +161,13 @@ function SignIn() {
           />
         </div>
       </div>
-      <div id="imgBg">
-        <img src={require('../../assets/signin_img.svg')} alt="img" />
-        <span className="tagline">Vào bếp không khó</span>
-        <span className="tagline">Có Lemon-aid lo</span>
-      </div>
+      {isDesktopOrLaptop && (
+        <div id="imgBg">
+          <img src={require('../../assets/signin_img.svg')} alt="img" />
+          <span className="tagline">Vào bếp không khó</span>
+          <span className="tagline">Có Lemon-aid lo</span>
+        </div>
+      )}
     </div>
   )
 }

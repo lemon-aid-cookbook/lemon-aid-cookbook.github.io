@@ -12,9 +12,10 @@ import { CTextField, helperTextStyles, styles } from 'pages/SignIn/constants'
 import React from 'react'
 import { FiX } from 'react-icons/fi'
 import 'react-image-crop/dist/ReactCrop.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { COLOR } from 'ultis/functions'
 import * as yup from 'yup'
+import { ChangePassword } from '../redux/actions'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const validationSchema = yup.object().shape({
-  oldPass: yup
+  oldPassword: yup
     .string()
     .required('* Vui lòng nhập mật khẩu cũ')
     .min(8, 'Mật khẩu gồm 8 kí tự trở lên')
@@ -45,7 +46,7 @@ const validationSchema = yup.object().shape({
     .matches(/(?=.{8,})/, {
       message: 'Mật khẩu phải gồm 8 kí tự'
     }),
-  password: yup
+  newPassword: yup
     .string()
     .required('* Vui lòng nhập mật khẩu mới')
     .min(8, 'Mật khẩu gồm 8 kí tự trở lên')
@@ -53,12 +54,15 @@ const validationSchema = yup.object().shape({
     .matches(/(?=.{8,})/, {
       message: 'Mật khẩu phải gồm 8 kí tự'
     })
-    .notOneOf([yup.ref('oldPass'), null], 'Mật khẩu mới phải khác mật khẩu cũ'),
+    .notOneOf(
+      [yup.ref('oldPassword'), null],
+      'Mật khẩu mới phải khác mật khẩu cũ'
+    ),
   confirmPassword: yup
     .string()
     .required('* Vui lòng nhập lại mật khẩu mới')
     .oneOf(
-      [yup.ref('password'), null],
+      [yup.ref('newPassword'), null],
       'Mật khẩu nhập lại phải khớp với mật khẩu đã nhập'
     )
 })
@@ -67,6 +71,7 @@ function UpdateInfoDialog(props) {
   const classes = useStyles()
   const helperTextStyle = helperTextStyles()
   const dispatch = useDispatch()
+  const user = useSelector(state => state.Auth.user)
 
   const { onClose, open } = props
 
@@ -74,9 +79,14 @@ function UpdateInfoDialog(props) {
     onClose()
   }
 
+  const onChangePassword = values => {
+    dispatch(ChangePassword.get({ ...values, userId: user.id }))
+    handleClose()
+  }
+
   const handleKeyPress = (isValid, event, values) => {
     if (isValid && event.key === 'Enter') {
-      // handleSignup(values);
+      onChangePassword(values)
     }
   }
 
@@ -99,13 +109,13 @@ function UpdateInfoDialog(props) {
         <Divider />
         <Formik
           initialValues={{
-            oldPass: '',
-            password: '',
+            oldPassword: '',
+            newPassword: '',
             confirmPassword: ''
           }}
           isInitialValid={false}
           validationSchema={validationSchema}
-          onSubmit={values => console.log(values)}
+          onSubmit={onChangePassword}
         >
           {({
             handleChange,
@@ -120,28 +130,28 @@ function UpdateInfoDialog(props) {
             return (
               <Form style={{ padding: 24 }}>
                 <CTextField
-                  helperText={errors.oldPass && errors.oldPass}
+                  helperText={errors.oldPassword && errors.oldPassword}
                   FormHelperTextProps={{ classes: helperTextStyle }}
                   label="Mật khẩu cũ"
                   variant="outlined"
-                  value={values.oldPass}
-                  onChange={handleChange('oldPass')}
-                  onTouchStart={() => setFieldTouched('oldPass')}
-                  onBlur={handleBlur('oldPass')}
+                  value={values.oldPassword}
+                  onChange={handleChange('oldPassword')}
+                  onTouchStart={() => setFieldTouched('oldPassword')}
+                  onBlur={handleBlur('oldPassword')}
                   onKeyPress={event => handleKeyPress(isValid, event, values)}
                   style={styles.input}
                   type="password"
                   autoFocus
                 />
                 <CTextField
-                  helperText={errors.password && errors.password}
+                  helperText={errors.newPassword && errors.newPassword}
                   FormHelperTextProps={{ classes: helperTextStyle }}
                   label="Mật khẩu mới"
                   variant="outlined"
-                  onChange={handleChange('password')}
-                  onTouchStart={() => setFieldTouched('password')}
-                  value={values.password}
-                  onBlur={handleBlur('password')}
+                  onChange={handleChange('newPassword')}
+                  onTouchStart={() => setFieldTouched('newPassword')}
+                  value={values.newPassword}
+                  onBlur={handleBlur('newPassword')}
                   onKeyPress={event => handleKeyPress(isValid, event, values)}
                   style={styles.input}
                   type="password"

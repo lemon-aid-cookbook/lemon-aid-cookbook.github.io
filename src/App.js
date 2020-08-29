@@ -30,6 +30,8 @@ function App() {
       <Route path="/signup" component={SignUp} />
       <Route path="/forgot" component={ForgotPassword} />
       <Route exact path="/search/:keyword" component={Recipes} />
+      <Route exact path="/category/:category" component={Recipes} />
+      <Route exact path="/recipes/:order" component={Recipes} />
       <Route path="/create" component={RecipeCreate} />
       <Route path="/recipe/:id" component={Recipe} />
       <Route path="/edit/:id" component={UpdateRecipePage} />

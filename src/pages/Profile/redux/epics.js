@@ -1,11 +1,15 @@
 import { GlobalModalSetup } from 'components/GlobalModal'
 import { store } from 'core/store'
+import { SignOut } from 'pages/SignIn/redux/actions'
 import { combineEpics, ofType } from 'redux-observable'
 import { catchError, exhaustMap, map } from 'rxjs/operators'
 import { request } from 'ultis/api'
 import { history, LIMIT_ITEMS, MODAL_TYPE } from 'ultis/functions'
 import { TAB_TYPES } from '../constants'
 import {
+  ChangePassword,
+  ChangePasswordFailed,
+  ChangePasswordSuccess,
   Follow,
   FollowFailed,
   FollowSuccess,
@@ -194,11 +198,49 @@ const unfollowEpic$ = action$ =>
     })
   )
 
+const changePasswordEpic$ = action$ =>
+  action$.pipe(
+    ofType(ChangePassword.type),
+    exhaustMap(action => {
+      return request({
+        method: 'POST',
+        url: 'new-password',
+        param: action.payload
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            store.dispatch(SignOut.get())
+            GlobalModalSetup.getGlobalModalHolder().alertMessage(
+              'Thông báo',
+              'Bạn đã đổi mật khẩu thành công. Vui lòng đăng nhập lại.',
+              MODAL_TYPE.NORMAL,
+              () =>
+                history.push({
+                  pathname: '/signin',
+                  state: { from: '/profile' }
+                })
+            )
+            return ChangePasswordSuccess.get(result.data)
+          }
+          GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            'Thông báo',
+            result.data.err
+          )
+          return ChangePasswordFailed.get(result)
+        }),
+        catchError(error => {
+          return ChangePasswordFailed.get(error)
+        })
+      )
+    })
+  )
+
 export const profileEpics = combineEpics(
   getProfilePostEpic$,
   updateInformationEpic$,
   getProfileEpic$,
   followEpic$,
   unfollowEpic$,
-  getAnotherProfileEpic$
+  getAnotherProfileEpic$,
+  changePasswordEpic$
 )

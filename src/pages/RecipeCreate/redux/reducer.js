@@ -3,12 +3,18 @@ import {
   GetDetailRecipeSuccess,
   SearchRecipes,
   SearchRecipesFailed,
-  SearchRecipesSuccess
+  SearchRecipesSuccess,
+  SearchLatestRecipesSuccess,
+  SearchFavoriteRecipesSuccess,
+  GetFollowingPostsSuccess
 } from './actions'
 
 const initialState = {
   detailRecipe: null,
   searchResult: [],
+  favoriteRecipe: [],
+  latestRecipe: [],
+  followingPosts: [],
   totalItems: 0,
   isLoadingSearch: false
 }
@@ -19,6 +25,21 @@ export function recipeReducer(state = initialState, action) {
       return {
         ...state,
         detailRecipe: action.payload.post
+      }
+    case SearchLatestRecipesSuccess.type:
+      return {
+        ...state,
+        latestRecipe: action.payload.posts
+      }
+    case GetFollowingPostsSuccess.type:
+      return {
+        ...state,
+        followingPosts: action.payload.posts
+      }
+    case SearchFavoriteRecipesSuccess.type:
+      return {
+        ...state,
+        favoriteRecipe: action.payload.posts
       }
     case SearchRecipes.type:
       return {
@@ -34,7 +55,9 @@ export function recipeReducer(state = initialState, action) {
       return {
         ...state,
         searchResult: action.payload.posts,
-        totalItems: action.payload.totalItems ? action.payload.totalItems : 0,
+        totalItems: action.payload.numberOfPosts
+          ? action.payload.numberOfPosts
+          : 0,
         isLoadingSearch: false
       }
     case DeleteRecipeSuccess.type:
