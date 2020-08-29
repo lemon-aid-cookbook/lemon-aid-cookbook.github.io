@@ -4,6 +4,7 @@ import CommentSend from 'components/Comment/CommentSend'
 import CommentView from 'components/Comment/CommentView'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,7 +25,18 @@ export default props => {
       <Typography variant="h6" color="primary">
         Thảo luận
       </Typography>
-      {user && <CommentSend owner={user} postId={postId} />}
+      {user ? (
+        <CommentSend owner={user} postId={postId} />
+      ) : (
+        <Typography style={{ marginBottom: 16 }}>
+          <Link
+            to={{ pathname: '/signin', state: { from: `/recipe/${postId}` } }}
+            style={{ textDecoration: 'none', color: 'black' }}
+          >
+            Đăng nhập để bình luận
+          </Link>
+        </Typography>
+      )}
       {comments && comments.length > 0 && isShowAll
         ? comments.map(item => (
             <CommentView

@@ -28,6 +28,7 @@ import { IoIosHeart, IoIosHeartEmpty } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { COLOR, MODAL_TYPE } from 'ultis/functions'
+import { useMediaQuery } from 'react-responsive'
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -84,6 +85,7 @@ export default props => {
   const [anchor, setAnchor] = useState(null)
   const history = useHistory()
   const [dialog, setDialog] = useState(false)
+  const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
 
   const follow = () => {
     if (user) {
@@ -166,7 +168,11 @@ export default props => {
         </div>
       </div>
       <div style={{ textAlign: 'center' }}>
-        <Paper elevation={0} className={classes.bigContainer}>
+        <Paper
+          elevation={0}
+          className={classes.bigContainer}
+          style={isDesktopOrLaptop ? {} : { height: 300 }}
+        >
           <span
             className={classes.thumbnail}
             style={{ backgroundImage: `url('${thumbnail}')` }}

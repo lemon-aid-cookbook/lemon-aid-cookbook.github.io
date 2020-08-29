@@ -18,7 +18,7 @@ export const CATEGORY_ITEMS = [
   'Tráng miệng'
 ]
 
-export const MAX_COOKING_TIME = 360
+export const MAX_COOKING_TIME = 1000
 
 export const recipeStyles = makeStyles(theme => ({
   root: {

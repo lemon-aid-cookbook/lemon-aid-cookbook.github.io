@@ -8,18 +8,20 @@ import { useHistory } from 'react-router-dom'
 import { COLOR } from 'ultis/functions'
 import * as yup from 'yup'
 import '../SignIn/signin.css'
+import { useMediaQuery } from 'react-responsive'
 
 function ForgotPassword() {
   const history = useHistory()
   const dispatch = useDispatch()
   const helperTextStyle = helperTextStyles()
   const user = useSelector(state => state.Auth?.user)
+  const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
 
   useEffect(() => {
     if (user) {
       history.push('/')
     }
-  }, [])
+  }, [user])
 
   const validationSchema = yup.object().shape({
     email: yup
@@ -106,9 +108,11 @@ function ForgotPassword() {
           </Formik>
         </div>
       </div>
-      <div id="imgBg">
-        <img src={require('../../assets/forgot_pass.svg')} alt="img" />
-      </div>
+      {isDesktopOrLaptop && (
+        <div id="imgBg">
+          <img src={require('../../assets/forgot_pass.svg')} alt="img" />
+        </div>
+      )}
     </div>
   )
 }

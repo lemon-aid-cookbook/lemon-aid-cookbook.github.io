@@ -31,7 +31,16 @@ import {
   UnlikePostSuccess,
   UpdateRecipe,
   UpdateRecipeFailed,
-  UpdateRecipeSuccess
+  UpdateRecipeSuccess,
+  SearchLatestRecipes,
+  SearchLatestRecipesSuccess,
+  SearchLatestRecipesFailed,
+  SearchFavoriteRecipes,
+  SearchFavoriteRecipesSuccess,
+  SearchFavoriteRecipesFailed,
+  GetFollowingPosts,
+  GetFollowingPostsSuccess,
+  GetFollowingPostsFailed
 } from './actions'
 import { push, goBack } from 'connected-react-router'
 
@@ -228,6 +237,50 @@ const searchRecipesEpic$ = action$ =>
     })
   )
 
+const searchLatestRecipesEpic$ = action$ =>
+  action$.pipe(
+    ofType(SearchLatestRecipes.type),
+    exhaustMap(action => {
+      return request({
+        method: 'GET',
+        url: 'post/search',
+        param: { sort: 'latest', limit: 4, page: 1 }
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return SearchLatestRecipesSuccess.get(result.data)
+          }
+          return SearchLatestRecipesFailed.get(result)
+        }),
+        catchError(error => {
+          return SearchLatestRecipesFailed.get(error)
+        })
+      )
+    })
+  )
+
+const searchFavoriteRecipesEpic$ = action$ =>
+  action$.pipe(
+    ofType(SearchFavoriteRecipes.type),
+    exhaustMap(action => {
+      return request({
+        method: 'GET',
+        url: 'post/search',
+        param: { sort: 'common', limit: 4, page: 1 }
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return SearchFavoriteRecipesSuccess.get(result.data)
+          }
+          return SearchFavoriteRecipesFailed.get(result)
+        }),
+        catchError(error => {
+          return SearchFavoriteRecipesFailed.get(error)
+        })
+      )
+    })
+  )
+
 const likePostEpic$ = action$ =>
   action$.pipe(
     ofType(LikePost.type),
@@ -278,6 +331,28 @@ const unlikePostEpic$ = action$ =>
     })
   )
 
+const getFollowingPostEpic$ = action$ =>
+  action$.pipe(
+    ofType(GetFollowingPosts.type),
+    exhaustMap(action => {
+      return request({
+        method: 'GET',
+        url: 'post/getPostsByTabs',
+        param: action.payload
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return GetFollowingPostsSuccess.get(result.data)
+          }
+          return GetFollowingPostsFailed.get(result)
+        }),
+        catchError(error => {
+          return GetFollowingPostsFailed.get(error)
+        })
+      )
+    })
+  )
+
 export const recipeEpics = combineEpics(
   createRecipeEpic$,
   getDetailRecipeEpic$,
@@ -287,5 +362,8 @@ export const recipeEpics = combineEpics(
   searchRecipesEpic$,
   deleteRecipeEpic$,
   commentRecipeEpic$,
-  deleteCommentEpic$
+  deleteCommentEpic$,
+  searchLatestRecipesEpic$,
+  searchFavoriteRecipesEpic$,
+  getFollowingPostEpic$
 )

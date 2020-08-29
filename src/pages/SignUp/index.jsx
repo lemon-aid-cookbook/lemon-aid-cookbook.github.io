@@ -9,18 +9,20 @@ import { useHistory } from 'react-router-dom'
 import { COLOR, CLIENT_ID } from 'ultis/functions'
 import * as yup from 'yup'
 import '../SignIn/signin.css'
+import { useMediaQuery } from 'react-responsive'
 
 function SignUp() {
   const history = useHistory()
   const helperTextStyle = helperTextStyles()
   const dispatch = useDispatch()
   const user = useSelector(state => state.Auth?.user)
+  const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
 
   useEffect(() => {
     if (user) {
       history.replace('/')
     }
-  }, [])
+  }, [user])
 
   const validationSchema = yup.object().shape({
     email: yup
@@ -202,11 +204,13 @@ function SignUp() {
           />
         </div>
       </div>
-      <div id="imgBg">
-        <img src={require('../../assets/signin_img.svg')} alt="img" />
-        <span className="tagline">Vào bếp không khó</span>
-        <span className="tagline">Có Lemon-aid lo</span>
-      </div>
+      {isDesktopOrLaptop && (
+        <div id="imgBg">
+          <img src={require('../../assets/signin_img.svg')} alt="img" />
+          <span className="tagline">Vào bếp không khó</span>
+          <span className="tagline">Có Lemon-aid lo</span>
+        </div>
+      )}
     </div>
   )
 }

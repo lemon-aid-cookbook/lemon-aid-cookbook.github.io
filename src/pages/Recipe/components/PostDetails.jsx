@@ -23,8 +23,10 @@ const useStyles = makeStyles(theme => ({
   },
   image: {
     width: '100%',
+    paddingTop: '100%',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center 40%',
     borderRadius: '1.5rem',
-    display: 'block',
     marginBottom: theme.spacing(1)
   },
   chip: {
@@ -92,7 +94,10 @@ export default props => {
                 <strong>Bước {step.stt}:</strong> {step.making}
               </Typography>
               {step.image && (
-                <img src={step.image} alt="img" className={classes.image} />
+                <div
+                  style={{ backgroundImage: `url('${step.image}')` }}
+                  className={classes.image}
+                />
               )}
             </div>
           ))}

@@ -1,5 +1,5 @@
 import { GlobalModalSetup } from 'components/GlobalModal'
-import { goBack, replace } from 'connected-react-router'
+import { replace } from 'connected-react-router'
 import { store } from 'core/store'
 import { GetProfile } from 'pages/Profile/redux/actions'
 import { combineEpics, ofType } from 'redux-observable'
@@ -16,7 +16,6 @@ import {
   SignUpRequestFailed,
   SignUpRequestSuccess
 } from './actions'
-import { history } from 'ultis/functions'
 
 const signinEpic$ = action$ =>
   action$.pipe(
@@ -94,7 +93,7 @@ const resetPasswordEpic$ = action$ =>
           if (result.status === 200) {
             GlobalModalSetup.getGlobalModalHolder().alertMessage(
               'Thông báo',
-              'Kiểm tra email để thay đổi mật khẩu'
+              'Vui lòng kiểm tra email để thay đổi mật khẩu'
             )
             return ResetPasswordSuccess.get(result.data)
           }

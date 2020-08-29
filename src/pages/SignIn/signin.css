@@ -49,8 +49,8 @@
   border-radius: calc(24px + 1vmin);
   align-items: center;
   justify-content: center;
-  width: calc(400px + 1vmin);
-  min-width: calc(300px + 1vmin);
+  width: 90%;
+  max-width: calc(400px + 1vmin);
   padding: calc(20px + 1vmin);
 }
 

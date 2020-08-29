@@ -39,7 +39,8 @@ export default props => {
     setFood,
     sort,
     setSort,
-    filterResult
+    filterResult,
+    category
   } = props
 
   const handleLevelChange = e => {
@@ -75,9 +76,9 @@ export default props => {
           <Typography variant="h6" className={classes.recipesNum}>
             {props.name}
           </Typography>
-          <Typography variant="caption">
+          {!recipe.isLoadingSearch && <Typography variant="caption">
             {recipe.totalItems ? recipe.totalItems : 0} công thức
-          </Typography>
+          </Typography>}
         </div>
         <div
           className={isDesktopOrLaptop ? classes.itemName : classes.itemNameCol}
@@ -98,7 +99,7 @@ export default props => {
               className={classes.sortMenu}
               onChange={e => {
                 setSort(e.target.value)
-                filterResult(e.target.value)
+                filterResult(e.target.value, 1)
               }}
             >
               <MenuItem value="latest">Mới nhất</MenuItem>
@@ -135,22 +136,24 @@ export default props => {
               Độ khó
             </Button>
           </span>
-          <span className={classes.filterMenu}>
-            <Button
-              className={clsx(classes.expand, {
-                [classes.expandOpen]: expanded.isExpanded
-              })}
-              onClick={() => handleExpanded('food')}
-              aria-expanded={expanded.isExpanded}
-              size="small"
-              endIcon={<ExpandMoreIcon />}
-            >
-              Ẩm thực
-            </Button>
-          </span>
+          {category == null && (
+            <span className={classes.filterMenu}>
+              <Button
+                className={clsx(classes.expand, {
+                  [classes.expandOpen]: expanded.isExpanded
+                })}
+                onClick={() => handleExpanded('food')}
+                aria-expanded={expanded.isExpanded}
+                size="small"
+                endIcon={<ExpandMoreIcon />}
+              >
+                Ẩm thực
+              </Button>
+            </span>
+          )}
           <span>
             <Button
-              onClick={() => filterResult(sort)}
+              onClick={() => filterResult(sort, 1)}
               aria-expanded={expanded.isExpanded}
               size="small"
               variant="contained"
@@ -164,7 +167,7 @@ export default props => {
               {expanded.type === 'times' ? (
                 <Slider
                   value={timeRange}
-                  min={1}
+                  min={0}
                   max={MAX_COOKING_TIME}
                   onChange={(event, value) => setTimeRange(value)}
                   valueLabelDisplay="auto"
