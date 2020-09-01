@@ -1,6 +1,8 @@
 import { Typography, Chip } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
+import { useHistory } from 'react-router-dom'
+import { CATEGORIES } from 'pages/Recipes/constant'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,9 +39,18 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default props => {
-  const { cookTime, ration, materials, steps, level, categories } = props
+  const {
+    cookTime,
+    ration,
+    materials,
+    steps,
+    level,
+    categories,
+    description
+  } = props
 
   const classes = useStyles()
+  const history = useHistory()
 
   return (
     <>
@@ -66,9 +77,25 @@ export default props => {
               label={item}
               color={'primary'}
               className={classes.chip}
-              onClick={() => {}}
+              onClick={() =>
+                history.push(
+                  `/category/${
+                    CATEGORIES.find(cate => cate.title === item)?.code
+                  }`
+                )
+              }
             />
           ))}
+        </div>
+      )}
+      {description && description.length > 0 && (
+        <div className={classes.stepStyle}>
+          <Typography variant="h6" color="primary">
+            Mô tả
+          </Typography>
+          <Typography variant="body1" style={{ textAlign: 'justify' }}>
+            {description}
+          </Typography>
         </div>
       )}
       {materials && materials.length > 0 && (
