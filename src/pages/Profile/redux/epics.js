@@ -27,7 +27,10 @@ import {
   UnfollowSuccess,
   UpdateInformation,
   UpdateInformationFailed,
-  UpdateInformationSuccess
+  UpdateInformationSuccess,
+  GetTopUser,
+  GetTopUserSuccess,
+  GetTopUserFailed
 } from './actions'
 
 const getProfilePostEpic$ = action$ =>
@@ -152,6 +155,27 @@ const getAnotherProfileEpic$ = action$ =>
     })
   )
 
+const getTopUserEpic$ = action$ =>
+  action$.pipe(
+    ofType(GetTopUser.type),
+    exhaustMap(action => {
+      return request({
+        method: 'GET',
+        url: 'user/get/topuser'
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return GetTopUserSuccess.get(result.data)
+          }
+          return GetTopUserFailed.get(result)
+        }),
+        catchError(error => {
+          return GetTopUserFailed.get(error)
+        })
+      )
+    })
+  )
+
 const followEpic$ = action$ =>
   action$.pipe(
     ofType(Follow.type),
@@ -242,5 +266,6 @@ export const profileEpics = combineEpics(
   followEpic$,
   unfollowEpic$,
   getAnotherProfileEpic$,
-  changePasswordEpic$
+  changePasswordEpic$,
+  getTopUserEpic$
 )

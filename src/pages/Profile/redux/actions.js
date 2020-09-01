@@ -34,4 +34,8 @@ export const ChangePassword = defineAction('CHANGE_PASSWORD')
 export const ChangePasswordSuccess = defineAction('CHANGE_PASSWORD_SUCCESS')
 export const ChangePasswordFailed = defineAction('CHANGE_PASSWORD_FAILED')
 
+export const GetTopUser = defineAction('GET_TOP_USER')
+export const GetTopUserSuccess = defineAction('GET_TOP_USER_SUCCESS')
+export const GetTopUserFailed = defineAction('GET_TOP_USER_FAILED')
+
 export const SetProfileTab = defineAction('SET_PROFILE_TAB')

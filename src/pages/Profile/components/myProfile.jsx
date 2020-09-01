@@ -193,7 +193,7 @@ export default function MyProfile(props) {
             className={classes.btnStyle}
             onClick={() => setInfoDialog(true)}
           >
-            Cập nhật thông tin
+            Đổi mật khẩu
           </Button>
         </div>
         <div className={classes.right}>
