@@ -5,6 +5,7 @@ import {
   GetProfilePostFailed,
   GetProfilePostSuccess,
   GetProfileSuccess,
+  GetTopUserSuccess,
   SetProfileTab,
   UpdateInformation,
   UpdateInformationFailed,
@@ -20,7 +21,8 @@ const initialState = {
   isLoadingRecipe: false,
   isLoadingAvatar: false,
   userFollowings: [],
-  profileDetail: null
+  profileDetail: null,
+  topUser: []
 }
 
 export function profileReducer(state = initialState, action) {
@@ -52,6 +54,11 @@ export function profileReducer(state = initialState, action) {
       return {
         ...state,
         isLoadingRecipe: false
+      }
+    case GetTopUserSuccess.type:
+      return {
+        ...state,
+        topUser: action.payload.data
       }
     case UpdateInformation.type:
       return {
