@@ -1,13 +1,13 @@
 import { CircularProgress, Container } from '@material-ui/core'
 import { GetDetailRecipe } from 'pages/RecipeCreate/redux/actions'
 import React, { useEffect } from 'react'
+import MetaTags from 'react-meta-tags'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import AppHeader from '../../components/Header/AppHeader'
 import PostComments from './components/PostComments'
 import PostDetails from './components/PostDetails'
 import PostHeader from './components/PostHeader'
-import MetaTags from 'react-meta-tags'
 
 export default props => {
   const params = useParams()
@@ -57,6 +57,7 @@ export default props => {
           level={post.difficultLevel}
           materials={post.ingredients}
           steps={post.content}
+          description={post.description}
         />
         <hr style={{ margin: '2rem 0' }} />
         <PostComments comments={post.Comments} postId={post.id} />
