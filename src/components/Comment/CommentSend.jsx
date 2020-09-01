@@ -4,7 +4,7 @@ import SendIcon from '@material-ui/icons/Send'
 import { CommentPost } from 'pages/RecipeCreate/redux/actions'
 import { CTextField } from 'pages/SignIn/constants'
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +24,7 @@ export default props => {
   const { owner, postId } = props
 
   const classes = useStyles()
+  const userDetail = useSelector(state => state.Profile.userDetail)
   const dispatch = useDispatch()
   const [cmt, setCmt] = useState('')
   const isValid = cmt && cmt.length > 0
@@ -54,7 +55,7 @@ export default props => {
     >
       <div style={{ flex: 1 }}>
         <Avatar
-          src={owner.avatar}
+          src={userDetail.avatar ? userDetail.avatar : owner.avatar}
           alt={owner.username}
           className={classes.ava}
         />
