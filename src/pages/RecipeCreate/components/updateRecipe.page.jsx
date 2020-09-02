@@ -141,7 +141,7 @@ export default function UpdateRecipePage(props) {
           title: detail.title,
           description: detail.description,
           avatar: detail.avatar,
-          ration: detail.ration,
+          ration: Number(detail.ration),
           cookingTime: detail.cookingTime,
           difficultLevel: detail.difficultLevel,
           ingredients: detail.ingredients,

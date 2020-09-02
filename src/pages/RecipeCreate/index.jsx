@@ -103,7 +103,7 @@ export default props => {
           title: '',
           description: '',
           avatar: null,
-          ration: '1',
+          ration: 1,
           cookingTime: 20,
           difficultLevel: 1,
           ingredients: [''],
