@@ -83,7 +83,10 @@ export const validationRecipeSchema = yup.object().shape({
     .trim()
     .required('* Vui lòng nhập tiêu đề')
     .max(255, 'Tiêu đề không được quá 255 kí tự'),
-  ration: yup.string().trim().required('* Vui lòng nhập khẩu phần'),
+  ration: yup
+    .number()
+    .required('* Vui lòng nhập khẩu phần')
+    .min(1, 'Công thức dành cho ít nhất 1 người ăn'),
   cookingTime: yup
     .number()
     .required('* Vui lòng nhập thời gian thực hiện')
