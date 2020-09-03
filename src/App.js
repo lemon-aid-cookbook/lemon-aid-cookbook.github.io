@@ -1,4 +1,5 @@
 import ForgotPassword from 'pages/ForgotPassword'
+import CreatePasswordPage from 'pages/ForgotPassword/components/createPasswordPage'
 import Home from 'pages/Home'
 import Profile from 'pages/Profile'
 import { GetProfile } from 'pages/Profile/redux/actions'
@@ -29,6 +30,7 @@ function App() {
       <Route path="/signin" component={SignIn} />
       <Route path="/signup" component={SignUp} />
       <Route path="/forgot" component={ForgotPassword} />
+      <Route path="/reset/:token" component={CreatePasswordPage} />
       <Route exact path="/search/:keyword" component={Recipes} />
       <Route exact path="/category/:category" component={Recipes} />
       <Route exact path="/recipes/:order" component={Recipes} />

@@ -19,7 +19,7 @@ export default props => {
       dispatch(SetProfileTab.get({ tab: 0, page: 1 }))
     }
     dispatch(GetAnotherProfile.get(username))
-  }, [username])
+  }, [username, user])
 
   if (user && user.username === username) {
     return <MyProfile username={username} />

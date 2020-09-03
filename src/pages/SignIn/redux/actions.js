@@ -12,4 +12,8 @@ export const ResetPassword = defineAction('RESET_PASSWORD_REQUEST')
 export const ResetPasswordSuccess = defineAction('RESET_PASSWORD_SUCCESS')
 export const ResetPasswordFailed = defineAction('RESET_PASSWORD_FAILED')
 
+export const CreatePassword = defineAction('CREATE_PASSWORD_REQUEST')
+export const CreatePasswordSuccess = defineAction('CREATE_PASSWORD_SUCCESS')
+export const CreatePasswordFailed = defineAction('CREATE_PASSWORD_FAILED')
+
 export const SignOut = defineAction('SIGNOUT_REQUEST')
