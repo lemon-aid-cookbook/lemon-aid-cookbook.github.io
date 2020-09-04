@@ -103,6 +103,10 @@ const resetPasswordEpic$ = action$ =>
             )
             return ResetPasswordSuccess.get(result.data)
           }
+          GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            'Thông báo',
+            null
+          )
           return ResetPasswordFailed.get(result)
         }),
         catchError(error => {
