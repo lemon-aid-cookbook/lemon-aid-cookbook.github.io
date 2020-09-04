@@ -52,7 +52,8 @@ export const profileStyles = makeStyles(theme => ({
     justifyContent: 'center',
     borderRadius: 25,
     paddingLeft: 16,
-    paddingRight: 16
+    paddingRight: 16,
+    textAlign: 'center'
   },
   loading: {
     alignSelf: 'center',

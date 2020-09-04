@@ -20,6 +20,7 @@ import { GetProfilePost, SetProfileTab } from '../redux/actions'
 import AvatarDialog from './avatarDialog'
 import FollowDialog, { FLDIALOG_TYPES } from './followDialog'
 import UpdateInfoDialog from './updateInformation'
+import { useMediaQuery } from 'react-responsive'
 
 const tabs = ['Bài đăng', 'Yêu thích', 'Đang theo dõi']
 
@@ -32,6 +33,7 @@ export default function MyProfile(props) {
   const [src, setSrc] = useState(null)
   const [flDialog, setFlDialog] = useState(null)
   const [infoDialog, setInfoDialog] = useState(false)
+  const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
 
   const readSrc = picture => {
     let reader = new FileReader()
@@ -123,105 +125,213 @@ export default function MyProfile(props) {
   return (
     <>
       <AppHeader />
-      <Container maxWidth="lg" className={classes.root}>
-        <div className={classes.left}>
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            ref={inputRef}
-            type="file"
-            onChange={e => readSrc(e.target.files[0])}
-          />
-          {isLoadingAvatar ? (
-            <CircularProgress className={classes.loading} />
+      <Container maxWidth="lg">
+        <div
+          className={classes.root}
+          style={!isDesktopOrLaptop ? { flexDirection: 'column' } : {}}
+        >
+          {isDesktopOrLaptop ? (
+            <div className={classes.left}>
+              <input
+                accept="image/*"
+                style={{ display: 'none' }}
+                ref={inputRef}
+                type="file"
+                onChange={e => readSrc(e.target.files[0])}
+              />
+              {isLoadingAvatar ? (
+                <CircularProgress className={classes.loading} />
+              ) : (
+                <IconButton
+                  edge="end"
+                  onClick={() => inputRef.current.click()}
+                  color="inherit"
+                >
+                  <Avatar
+                    className={classes.large}
+                    src={
+                      profileDetail && profileDetail.avatar
+                        ? profileDetail.avatar
+                        : null
+                    }
+                  />
+                </IconButton>
+              )}
+              <Typography variant="h6" className={classes.boldText}>
+                {profileDetail.username}
+              </Typography>
+              <Typography variant="body1" className={classes.grayText}>
+                {profileDetail.email}
+              </Typography>
+              <Typography variant="h6" className={classes.boldText}>
+                {profileDetail.Posts ? profileDetail.Posts.length : 0}
+              </Typography>
+              <Typography variant="body1" className={classes.grayText}>
+                bài đăng
+              </Typography>
+              <ButtonBase
+                focusRipple
+                className={classes.flw}
+                onClick={() => setFlDialog(FLDIALOG_TYPES.FOLLOWER)}
+              >
+                <Typography variant="h6" className={classes.boldText}>
+                  {profileDetail.followers ? profileDetail.followers.length : 0}
+                </Typography>
+                <Typography variant="body1" className={classes.grayText}>
+                  người theo dõi
+                </Typography>
+              </ButtonBase>
+              <ButtonBase
+                focusRipple
+                className={classes.flw}
+                onClick={() => setFlDialog(FLDIALOG_TYPES.FOLLOWING)}
+              >
+                <Typography variant="h6" className={classes.boldText}>
+                  {profileDetail.followings
+                    ? profileDetail.followings.length
+                    : 0}
+                </Typography>
+                <Typography variant="body1" className={classes.grayText}>
+                  đang theo dõi
+                </Typography>
+              </ButtonBase>
+              <Button
+                size="medium"
+                color="primary"
+                variant="contained"
+                className={classes.btnStyle}
+                onClick={() => setInfoDialog(true)}
+              >
+                Đổi mật khẩu
+              </Button>
+            </div>
           ) : (
-            <IconButton
-              edge="end"
-              onClick={() => inputRef.current.click()}
-              color="inherit"
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <input
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  ref={inputRef}
+                  type="file"
+                  onChange={e => readSrc(e.target.files[0])}
+                />
+                {isLoadingAvatar ? (
+                  <CircularProgress className={classes.loading} />
+                ) : (
+                  <IconButton
+                    edge="end"
+                    onClick={() => inputRef.current.click()}
+                    color="inherit"
+                  >
+                    <Avatar
+                      className={classes.large}
+                      src={
+                        profileDetail && profileDetail.avatar
+                          ? profileDetail.avatar
+                          : null
+                      }
+                    />
+                  </IconButton>
+                )}
+                <div style={{ marginLeft: 20 }}>
+                  <Typography
+                    variant="h6"
+                    className={classes.boldText}
+                    style={{ marginTop: 0 }}
+                  >
+                    {profileDetail.username}
+                  </Typography>
+                  <Typography variant="body1" className={classes.grayText}>
+                    {profileDetail.email}
+                  </Typography>
+                  <Button
+                    size="medium"
+                    color="primary"
+                    variant="contained"
+                    className={classes.btnStyle}
+                    style={{ marginTop: 8 }}
+                    onClick={() => setInfoDialog(true)}
+                  >
+                    Đổi mật khẩu
+                  </Button>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-around',
+                  marginBottom: 20
+                }}
+              >
+                <div className={classes.flw}>
+                  <Typography variant="h6" className={classes.boldText}>
+                    {profileDetail.Posts ? profileDetail.Posts.length : 0}
+                  </Typography>
+                  <Typography variant="body1" className={classes.grayText}>
+                    bài đăng
+                  </Typography>
+                </div>
+                <ButtonBase
+                  focusRipple
+                  className={classes.flw}
+                  onClick={() => setFlDialog(FLDIALOG_TYPES.FOLLOWER)}
+                >
+                  <Typography variant="h6" className={classes.boldText}>
+                    {profileDetail.followers
+                      ? profileDetail.followers.length
+                      : 0}
+                  </Typography>
+                  <Typography variant="body1" className={classes.grayText}>
+                    người theo dõi
+                  </Typography>
+                </ButtonBase>
+                <ButtonBase
+                  focusRipple
+                  className={classes.flw}
+                  onClick={() => setFlDialog(FLDIALOG_TYPES.FOLLOWING)}
+                >
+                  <Typography variant="h6" className={classes.boldText}>
+                    {profileDetail.followings
+                      ? profileDetail.followings.length
+                      : 0}
+                  </Typography>
+                  <Typography variant="body1" className={classes.grayText}>
+                    đang theo dõi
+                  </Typography>
+                </ButtonBase>
+              </div>
+            </div>
+          )}
+
+          <div className={classes.right}>
+            <Tabs
+              value={profile.tab}
+              indicatorColor="primary"
+              textColor="primary"
+              onChange={(event, value) => onTabChange(value)}
+              aria-label="tab recipre"
             >
-              <Avatar
-                className={classes.large}
-                src={
-                  profileDetail && profileDetail.avatar
-                    ? profileDetail.avatar
-                    : null
-                }
-              />
-            </IconButton>
-          )}
-          <Typography variant="h6" className={classes.boldText}>
-            {profileDetail.username}
-          </Typography>
-          <Typography variant="body1" className={classes.grayText}>
-            {profileDetail.email}
-          </Typography>
-          <Typography variant="h6" className={classes.boldText}>
-            {profileDetail.Posts ? profileDetail.Posts.length : 0}
-          </Typography>
-          <Typography variant="body1" className={classes.grayText}>
-            bài đăng
-          </Typography>
-          <ButtonBase
-            focusRipple
-            className={classes.flw}
-            onClick={() => setFlDialog(FLDIALOG_TYPES.FOLLOWER)}
-          >
-            <Typography variant="h6" className={classes.boldText}>
-              {profileDetail.followers ? profileDetail.followers.length : 0}
-            </Typography>
-            <Typography variant="body1" className={classes.grayText}>
-              người theo dõi
-            </Typography>
-          </ButtonBase>
-          <ButtonBase
-            focusRipple
-            className={classes.flw}
-            onClick={() => setFlDialog(FLDIALOG_TYPES.FOLLOWING)}
-          >
-            <Typography variant="h6" className={classes.boldText}>
-              {profileDetail.followings ? profileDetail.followings.length : 0}
-            </Typography>
-            <Typography variant="body1" className={classes.grayText}>
-              đang theo dõi
-            </Typography>
-          </ButtonBase>
-          <Button
-            size="medium"
-            color="primary"
-            variant="contained"
-            className={classes.btnStyle}
-            onClick={() => setInfoDialog(true)}
-          >
-            Đổi mật khẩu
-          </Button>
-        </div>
-        <div className={classes.right}>
-          <Tabs
-            value={profile.tab}
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={(event, value) => onTabChange(value)}
-            aria-label="tab recipre"
-          >
-            {tabs.map(item => (
-              <Tab label={item} />
-            ))}
-          </Tabs>
-          {isLoadingRecipe || profileDetail.username !== props.username ? (
-            <CircularProgress className={classes.loading} />
-          ) : tabPosts && tabPosts.length > 0 ? (
-            <>
-              <ListRecipes list={tabPosts} />
-              <Pagination
-                count={totalPages}
-                page={page}
-                onChange={onPageChange}
-              />
-            </>
-          ) : (
-            renderEmpty()
-          )}
+              {tabs.map(item => (
+                <Tab label={item} />
+              ))}
+            </Tabs>
+            {isLoadingRecipe || profileDetail.username !== props.username ? (
+              <CircularProgress className={classes.loading} />
+            ) : tabPosts && tabPosts.length > 0 ? (
+              <>
+                <ListRecipes list={tabPosts} />
+                <Pagination
+                  count={totalPages}
+                  page={page}
+                  onChange={onPageChange}
+                />
+              </>
+            ) : (
+              renderEmpty()
+            )}
+          </div>
         </div>
       </Container>
       <AvatarDialog open={src != null} value={src} onClose={onCloseDialog} />
