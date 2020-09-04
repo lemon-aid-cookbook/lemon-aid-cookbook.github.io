@@ -70,8 +70,8 @@ export default function CommentView(props) {
     <div className={classes.container}>
       <CardHeader
         className={classes.card}
-        avatar={<Avatar className={classes.ava} src={comment.User.avatar} />}
-        title={comment.User.username}
+        avatar={<Avatar className={classes.ava} src={comment.User?.avatar} />}
+        title={comment.User?.username}
         subheader={comment.message}
       />
       <CardActions
@@ -93,7 +93,7 @@ export default function CommentView(props) {
             {comment.SubComment.length} trả lời
           </Button>
         )}
-        {user && user.id === comment.userId && (
+        {user && user.id === comment?.userId && (
           <Button
             size="small"
             color="primary"

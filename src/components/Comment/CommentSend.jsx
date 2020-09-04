@@ -55,7 +55,7 @@ export default props => {
     >
       <div style={{ flex: 1 }}>
         <Avatar
-          src={userDetail.avatar ? userDetail.avatar : owner.avatar}
+          src={userDetail?.avatar ? userDetail?.avatar : owner.avatar}
           alt={owner.username}
           className={classes.ava}
         />
