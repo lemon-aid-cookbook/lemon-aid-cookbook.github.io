@@ -1,15 +1,14 @@
 import Button from '@material-ui/core/Button'
 import { Form, Formik } from 'formik'
 import React, { useEffect } from 'react'
-import GoogleLogin from 'react-google-login'
 import { useDispatch, useSelector } from 'react-redux'
+import { useMediaQuery } from 'react-responsive'
 import { useHistory } from 'react-router-dom'
-import { CLIENT_ID, COLOR } from 'ultis/functions'
+import { COLOR } from 'ultis/functions'
 import * as yup from 'yup'
 import { CTextField, helperTextStyles, styles } from './constants'
 import { SignInRequest } from './redux/actions'
 import './signin.css'
-import { useMediaQuery } from 'react-responsive'
 
 function SignIn() {
   const history = useHistory()
@@ -153,12 +152,12 @@ function SignIn() {
               )
             }}
           </Formik>
-          <GoogleLogin
+          {/* <GoogleLogin
             clientId={CLIENT_ID}
             buttonText="Đăng nhập bẳng Google"
             onSuccess={responseGoogle}
             onFailure={responseGoogle}
-          />
+          /> */}
         </div>
       </div>
       {isDesktopOrLaptop && (

@@ -3,13 +3,12 @@ import { Form, Formik } from 'formik'
 import { CTextField, helperTextStyles, styles } from 'pages/SignIn/constants'
 import { SignUpRequest } from 'pages/SignIn/redux/actions'
 import React, { useEffect } from 'react'
-import GoogleLogin from 'react-google-login'
 import { useDispatch, useSelector } from 'react-redux'
+import { useMediaQuery } from 'react-responsive'
 import { useHistory } from 'react-router-dom'
-import { COLOR, CLIENT_ID } from 'ultis/functions'
+import { COLOR } from 'ultis/functions'
 import * as yup from 'yup'
 import '../SignIn/signin.css'
-import { useMediaQuery } from 'react-responsive'
 
 function SignUp() {
   const history = useHistory()
@@ -196,12 +195,12 @@ function SignUp() {
               )
             }}
           </Formik>
-          <GoogleLogin
+          {/* <GoogleLogin
             clientId={CLIENT_ID}
             buttonText="Đăng ký với Google"
             onSuccess={responseGoogle}
             onFailure={responseGoogle}
-          />
+          /> */}
         </div>
       </div>
       {isDesktopOrLaptop && (
