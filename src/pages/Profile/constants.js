@@ -8,7 +8,8 @@ export const profileStyles = makeStyles(theme => ({
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    flex: 1
   },
   left: {
     display: 'flex',
